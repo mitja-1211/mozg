@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="ru" class="m-0 p-0">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicMind - Музыка и Психика</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#8B5CF6',
+                        background: '#F8FAFC',
+                        card: '#FFFFFF',
+                        scientific: '#0EA5E9',
+                        highlight: '#BFDBFE',
+                        text: '#1E293B',
+                        textSecondary: '#475569'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    },
+                    backdropBlur: {
+                        'glass': '12px'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'text-reveal': 'textReveal 1s forwards',
+                        'gradient': 'gradient 15s ease infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'parallax': 'parallax 20s linear infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        },
+                        'text-reveal': {
+                            '0%': { width: '0%', opacity: '0' },
+                            '100%': { width: '100%', opacity: '1' }
+                        },
+                        gradient: {
+                            '0%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                            '100%': { 'background-position': '0% 50%' }
+                        },
+                        glow: {
+                            '0%': { 'text-shadow': '0 0 5px rgba(14, 165, 233, 0.5)' },
+                            '100%': { 'text-shadow': '0 0 15px rgba(14, 165, 233, 0.8)' }
+                        },
+                        parallax: {
+                            '0%': { transform: 'translateX(0) translateY(0)' },
+                            '100%': { transform: 'translateX(-50%) translateY(-10%)' }
+                        }
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px rgba(0, 0, 0, 0.08)',
+                        'glass-hover': '0 12px 48px rgba(79, 70, 229, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-bg {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 16px;
+            }
+            
+            .hover-glow {
+                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            
+            .hover-glow:hover {
+                transform: translateY(-10px);
+                box-shadow: var(--tw-shadow, 0 0 #0000);
+                --tw-shadow: 0 20px 50px -10px rgba(79, 70, 229, 0.25);
+            }
+            
+            .scientific-badge {
+                background: linear-gradient(90deg, rgba(14, 165, 233, 0.1), rgba(139, 92, 246, 0.05));
+                color: #0EA5E9;
+                border: 1px solid rgba(14, 165, 233, 0.2);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .scientific-badge::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 100%;
+                background: linear-gradient(to bottom, #4F46E5, #8B5CF6);
+            }
+            
+            .gradient-text {
+                background: linear-gradient(90deg, #4F46E5, #8B5CF6, #0EA5E9);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                background-size: 200% auto;
+            }
+            
+            .animate-gradient {
+                animation: gradient 8s linear infinite;
+            }
+            
+            .card-content {
+                transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            
+            .card-content:hover {
+                transform: scale(1.02);
+            }
+            
+            .music-note {
+                animation: float 6s ease-in-out infinite;
+                transform-origin: bottom center;
+            }
+            
+            .music-note:nth-child(2) {
+                animation-delay: 1.5s;
+            }
+            
+            .music-note:nth-child(3) {
+                animation-delay: 3s;
+            }
+            
+            .parallax {
+                transform: translateY(0);
+                transition: transform 0.3s ease-out;
+            }
+            
+            .gradient-border {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .gradient-border::after {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9, #4F46E5);
+                background-size: 400% 400%;
+                animation: gradient 15s ease infinite;
+                z-index: -1;
+                border-radius: inherit;
+            }
+            
+            .reveal {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            }
+            
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .category-tag {
+                transition: all 0.3s ease;
+            }
+            
+            .category-tag:hover {
+                transform: scale(1.05);
+                background: linear-gradient(90deg, rgba(79, 70, 229, 0.1), rgba(139, 92, 246, 0.1));
+                border-color: rgba(139, 92, 246, 0.3);
+            }
+            
+            .floating {
+                animation: float 6s ease-in-out infinite;
+            }
+            
+            .floating:nth-child(2) {
+                animation-delay: 2s;
+            }
+            
+            .floating:nth-child(3) {
+                animation-delay: 4s;
+            }
+            
+            .sound-wave {
+                height: 1px;
+                background: linear-gradient(90deg, 
+                    transparent, 
+                    #4F46E5, 
+                    #8B5CF6,
+                    #4F46E5,
+                    transparent);
+                background-size: 300% 100%;
+                animation: waveAnimation 5s infinite;
+            }
+            
+            @keyframes waveAnimation {
+                0% { background-position: 100% 50%; }
+                100% { background-position: -100% 50%; }
+            }
+            
+            .glow-effect {
+                text-shadow: 0 0 8px rgba(14, 165, 233, 0.15);
+            }
+            
+            .hero-gradient {
+                background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #F8FAFC 100%);
+            }
+            
+            .card-hover::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 16px;
+                padding: 1px;
+                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9);
+                -webkit-mask: 
+                    linear-gradient(#fff 0 0) content-box, 
+                    linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .card-hover:hover::before {
+                opacity: 1;
+            }
+            
+            .highlight {
+                position: relative;
+            }
+            
+            .highlight::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, #4F46E5, #8B5CF6);
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.3s ease;
+            }
+            
+            .highlight:hover::after {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+            
+            .floating-button {
+                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+                transform: translateY(0);
+            }
+            
+            .floating-button:hover {
+                transform: translateY(-5px);
+            }
+            
+            .floating-button::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 12px;
+                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9);
+                opacity: 0;
+                z-index: -1;
+                transition: opacity 0.3s ease;
+            }
+            
+            .floating-button:hover::after {
+                opacity: 1;
+            }
+            
+            .testimonial-card {
+                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            
+            .testimonial-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+            }
+            
+            .challenge-card {
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(240, 245, 255, 0.8));
+                border: 1px solid rgba(14, 165, 233, 0.1);
+            }
+            
+            .challenge-card:hover {
+                transform: translateY(-8px);
+                border-color: rgba(14, 165, 233, 0.25);
+                box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+            }
+            
+            .parallax-container {
+                perspective: 1000px;
+            }
+            
+            .parallax-layer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+            
+            .parallax-content {
+                position: relative;
+                z-index: 10;
+            }
+            
+            .floating-element {
+                animation: float 8s ease-in-out infinite;
+            }
+            
+            .floating-element:nth-child(2) {
+                animation-delay: 2s;
+            }
+            
+            .floating-element:nth-child(3) {
+                animation-delay: 4s;
+            }
+            
+            .music-pattern {
+                background-image: 
+                    radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.03) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 20%);
+                background-size: 200px 200px;
+            }
+            
+            .cursor-dot {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: rgba(14, 165, 233, 0.6);
+                pointer-events: none;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                mix-blend-mode: screen;
+                transition: width 0.2s, height 0.2s;
+            }
+            
+            .cursor-outline {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 40px;
+                height: 40px;
+                border: 2px solid rgba(14, 165, 233, 0.2);
+                border-radius: 50%;
+                pointer-events: none;
+                transform: translate(-50%, -50%);
+                z-index: 9998;
+                transition: width 0.3s, height 0.3s, border-color 0.3s;
+            }
+            
+            .highlight-on-hover {
+                transition: all 0.3s ease;
+            }
+            
+            .highlight-on-hover:hover {
+                background: rgba(14, 165, 233, 0.05);
+                border-color: rgba(14, 165, 233, 0.15);
+            }
+            
+            .parallax-effect {
+                transition: transform 0.1s ease-out;
+            }
+            
+            .parallax-item {
+                transition: transform 0.3s ease-out;
+            }
+            
+            .parallax-scene {
+                overflow: hidden;
+                position: relative;
+            }
+            
+            .parallax-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 Q40,5 60,20 T100,20" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.5"/><path d="M20,50 Q40,35 60,50 T100,50" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.3"/><path d="M20,80 Q40,65 60,80 T100,80" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.2"/></svg>');
+                background-size: 200px 200px;
+                z-index: -1;
+            }
+            
+            .parallax-foreground {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%234F46E5" opacity="0.2"/><circle cx="50" cy="50" r="3" fill="%238B5CF6" opacity="0.2"/><circle cx="80" cy="80" r="2" fill="%230EA5E9" opacity="0.2"/></svg>');
+                background-size: 150px 150px;
+                z-index: -1;
+            }
+            
+            .floating-icon {
+                animation: float 8s ease-in-out infinite;
+                position: absolute;
+                opacity: 0.1;
+            }
+            
+            .floating-icon:nth-child(1) {
+                top: 15%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+            
+            .floating-icon:nth-child(2) {
+                top: 30%;
+                right: 15%;
+                animation-delay: 2s;
+            }
+            
+            .floating-icon:nth-child(3) {
+                bottom: 25%;
+                left: 20%;
+                animation-delay: 4s;
+            }
+            
+            .floating-icon:nth-child(4) {
+                bottom: 15%;
+                right: 10%;
+                animation-delay: 6s;
+            }
+            
+            .floating-icon svg {
+                width: 40px;
+                height: 40px;
+                fill: none;
+                stroke: #4F46E5;
+            }
+            
+                        .parallax-scroll {
+                transition: transform 0.1s ease-out;
+            }
+        }
+    </style>
+        @layer components {
+                .sequential-steps::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 51px; /* Adjust for line thickness */
+                    width: 2px;
+                    background: repeating-linear-gradient(to bottom, #BFDBFE, #BFDBFE 5px, transparent 5px, transparent 10px);
+                    z-index: -1;
+                }
+
+                /* Adjust for mobile/smaller screens */
+                @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller */
+                    .sequential-steps::before {
+                        left: 67px; /* Adjust for line thickness */
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-background text-text overflow-x-hidden relative m-0 p-0">
+    <!-- Кастомный курсор (удален для производительности и доступности) -->
+    
+    <!-- Анимированный фон с частицами -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 hero-gradient"></div>
+        <div class="absolute inset-0 opacity-30 music-pattern"></div>
+        
+        <!-- Параллакс-сцена -->
+        <div class="parallax-scene w-full h-full">
+            <div class="parallax-background w-full h-full"></div>
+            <div class="parallax-foreground w-full h-full"></div>
+            
+            <!-- Плавающие музыкальные иконки -->
+            <div class="floating-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 18.75H18a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0022.5 4.5h-2.818c-.597.000-1.185.03-1.758.087m-2.044.289a48.474 48.474 0 00-6.38-1.372m-12.636 18.369A48.469 48.469 0 0112 21c5.385 0 10.5-1.964 14.125-5.383" />
+                </svg>
+            </div>
+            <div class="floating-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                </svg>
+            </div>
+            <div class="floating-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.125 16.772a9 9 0 00-9.125-9.125 9.125 9.125 0 01-.193 1.737A6 6 0 006 18.748m3.889-2.772a3 3 0 003.462-6.571m-3.462 6.571a4.5 4.5 0 01-5.105-3.172 4.5 4.5 0 00-1.3-1.3 3 3 0 00-3.462 6.571 3 3 0 013.462-6.571 4.5 4.5 0 001.3 1.3 3 3 0 01.645 4.914" />
+                </svg>
+            </div>
+            <div class="floating-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Шапка сайта -->
+    <header class="bg-card shadow-md absolute top-0 left-0 right-0 z-50 border border-gray-100/50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Логотип -->
+                <a href="#" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 rounded-full gradient-border p-0.5">
+                        <div class="w-full h-full rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center group-hover:animate-spin-slow">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900 group-hover:gradient-text group-hover:animate-gradient">MusicMind</span>
+                </a>
+
+                <!-- Основное меню -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <div class="relative group">
+                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Главная</a>
+                    </div>
+                    
+                    <div class="relative group">
+                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
+                            Эмоции
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </a>
+                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
+                            <div class="py-2">
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Эмоциональная регуляция</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Музыкальные предпочтения</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Эмоции в музыке</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Преодоление негативных эмоций</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
+                            Здоровье
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </a>
+                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
+                            <div class="py-2">
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Снижение стресса</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Тревожность</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Депрессия</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Терапия</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
+                            Повседневность
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </a>
+                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
+                            <div class="py-2">
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Продуктивность</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Сон</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Учеба</a>
+                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Социум</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Наука</a>
+                    <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Блог</a>
+                </nav>
+
+                <!-- Мобильное меню -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary" aria-controls="mobile-menu" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Мобильное меню (скрыто по умолчанию) -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-3 border-t border-gray-100/50">
+                <div class="flex flex-col space-y-2">
+                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Главная</a>
+                    
+                    <div class="pl-3 border-l-2 border-primary">
+                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Эмоции</a>
+                        <div class="ml-2">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Эмоциональная регуляция</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Музыкальные предпочтения</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Эмоции в музыке</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Преодоление негативных эмоций</a>
+                        </div>
+                    </div>
+                    
+                    <div class="pl-3 border-l-2 border-primary">
+                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Здоровье</a>
+                        <div class="ml-2">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Снижение стресса</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Тревожность</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Депрессия</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Терапия</a>
+                        </div>
+                    </div>
+                    
+                    <div class="pl-3 border-l-2 border-primary">
+                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Повседневность</a>
+                        <div class="ml-2">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Продуктивность</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Сон</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Учеба</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Социум</a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Наука</a>
+                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Блог</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container mx-auto px-4 py-8 relative pt-16">
+        <!-- Верхняя секция с решением проблемы -->
+        <section class="text-center mb-16 max-w-5xl mx-auto relative parallax-scroll" data-parallax="0.1">
+            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary opacity-10 floating"></div>
+            <div class="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-gradient-to-r from-secondary to-scientific opacity-10 floating"></div>
+            
+            <span class="inline-block px-5 py-2.5 bg-gray-50 text-scientific text-sm font-medium rounded-full mb-6 border border-scientific/20 highlight-on-hover">
+                Научно-психологическое руководство
+            </span>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 relative">
+                <span class="block mb-4">Как использовать музыку</span>
+                <span class="gradient-text animate-gradient text-5xl md:text-6xl lg:text-7xl">для улучшения психического здоровья</span>
+                <span class="block mt-4 text-3xl md:text-4xl lg:text-5xl glow-effect">научно обоснованные методы без воды</span>
+            </h1>
+            
+            <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+                Наши материалы основаны на исследованиях музыкальной психологии 2020-2024 гг. и проверены практикой. 
+                Более 15 научных работ легли в основу наших рекомендаций.
+            </p>
+            
+            <div class="flex justify-center space-x-4 mt-6">
+                <a href="#" class="px-7 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-md floating-button hover:shadow-primary/20 transition-all">
+                    Начать изучение
+                </a>
+                <a href="#" class="px-7 py-4 border border-scientific/30 text-scientific font-bold rounded-xl hover:bg-scientific/5 transition-colors">
+                    Посмотреть научные источники
+                </a>
+            </div>
+        </section>
+
+        <!-- Упрощенный выбор цели -->
+        <section class="mb-20 relative parallax-scroll" data-parallax="0.05">
+            <div class="absolute inset-0 bg-gray-50 rounded-3xl -z-10"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-3xl -z-10"></div>
+            
+            <div class="text-center mb-10 relative">
+                <h2 class="text-3xl font-bold mb-4">С чего начать?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Выберите вашу основную цель — мы покажем самые релевантные материалы</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-5 mb-12 relative">
+                <button class="goal-btn px-8 py-4 bg-gradient-to-r from-primary/10 to-primary/5 text-primary rounded-2xl font-bold text-lg border border-primary/20 active relative overflow-hidden group" data-goal="stress">
+                    <span class="relative z-10">Снизить стресс</span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
+                </button>
+                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="productivity">
+                    <span class="relative z-10">Повысить продуктивность</span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
+                </button>
+                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="sleep">
+                    <span class="relative z-10">Улучшить сон</span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
+                </button>
+                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="emotions">
+                    <span class="relative z-10">Понять эмоции</span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
+                </button>
+            </div>
+            
+            <div class="flex justify-center">
+                <div class="w-16 h-3 rounded-full bg-gradient-to-r from-primary to-secondary"></div>
+            </div>
+        </section>
+
+        <!-- Звуковая волна разделитель -->
+        <div class="sound-wave mb-16 max-w-4xl mx-auto"></div>
+
+        <!-- ТОП-3 evergreen материала с научной базой -->
+        <section class="mb-20 goal-content active" data-goals="all stress">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl font-bold">ТОП-3 научно обоснованных материала</h2>
+                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
+                    Посмотреть все →
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Карточка 1 -->
+                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
+                    
+                    
+                    <div class="relative">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Музыка для снижения тревожности" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        
+                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex">
+                            <i class="bi bi-music-note-beamed text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 pt-6 card-content">
+                        <div class="flex items-center mb-4">
+                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Ментальное здоровье</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                На основе 15 исследований
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                            <a href="#">10 научно доказанных способов использовать музыку для снижения тревожности</a>
+                        </h3>
+                        
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Узнайте, какие жанры и темпы действительно работают против тревоги согласно последним исследованиям 2024 года.
+                        </p>
+                        
+                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Чтение: 8 минут
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                1.2K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Карточка 2 -->
+                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
+                    
+                    
+                    <div class="relative">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://picsum.photos/seed/productivity/600/480" alt="Музыка для продуктивности" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        
+                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex" style="animation-delay: 0.3s">
+                            <i class="bi bi-music-note-beamed text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 pt-6 card-content">
+                        <div class="flex items-center mb-4">
+                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Повседневная жизнь</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                8 научных источников
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                            <a href="#">Как подобрать идеальный плейлист для работы: руководство по нейропсихологии</a>
+                        </h3>
+                        
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Научитесь создавать плейлисты, которые увеличат вашу продуктивность на 40% без потери качества работы.
+                        </p>
+                        
+                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Чтение: 10 минут
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                980
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Карточка 3 -->
+                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
+                    
+                    
+                    <div class="relative">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://picsum.photos/seed/sleep/600/480" alt="Музыка и сон" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        
+                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex" style="animation-delay: 0.6s">
+                            <i class="bi bi-music-note-beamed text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 pt-6 card-content">
+                        <div class="flex items-center mb-4">
+                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Ментальное здоровье</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Meta-анализ 2023
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                            <a href="#">Музыка перед сном: что работает на самом деле (исследования 2024)</a>
+                        </h3>
+                        
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Узнайте, какие мелодии действительно улучшают качество сна, а какие могут навредить вашему циркадному ритму.
+                        </p>
+                        
+                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Чтение: 7 минут
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                1.5K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок "Читают сейчас" -->
+        <section class="mb-20">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl font-bold">Читают сейчас</h2>
+                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
+                    Посмотреть все →
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Card 1: Image Background Layout -->
+                <div class="relative rounded-2xl overflow-hidden shadow-lg group hover-glow h-80 parallax-item" data-parallax="0.05">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Эмоции" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
+                    <div class="relative h-full flex flex-col justify-end p-6 text-white">
+                        <div class="flex items-center mb-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20 mr-2">
+                                5 исследований
+                            </span>
+                            <span class="text-gray-300 text-xs">· 2 дня назад</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">
+                            <a href="#" class="hover:underline">Как музыка влияет на эмоциональную регуляцию: научное исследование</a>
+                        </h3>
+                        <p class="text-gray-200 text-sm leading-relaxed opacity-80">
+                            Узнайте, как определенные музыкальные элементы активируют области мозга, отвечающие за эмоции.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Image Background Layout -->
+                <div class="relative rounded-2xl overflow-hidden shadow-lg group hover-glow h-80 parallax-item" data-parallax="0.05">
+                    <img src="https://picsum.photos/seed/music-therapy/600/800" alt="Терапия" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
+                    <div class="relative h-full flex flex-col justify-end p-6 text-white">
+                        <div class="flex items-center mb-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20 mr-2">
+                                Meta-анализ
+                            </span>
+                            <span class="text-gray-300 text-xs">· вчера</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">
+                            <a href="#" class="hover:underline">Музыкальная терапия в домашних условиях: практическое руководство</a>
+                        </h3>
+                        <p class="text-gray-200 text-sm leading-relaxed opacity-80">
+                            Пошаговые упражнения, которые вы можете начать применять уже сегодня для улучшения психического здоровья.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок "Начните с основ" -->
+        <section class="mb-20 goal-content active" data-goals="all stress">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Начните с основ</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Последовательная цепочка материалов для тех, кто хочет снизить стресс с помощью музыки</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <!-- Шаг 1 -->
+                <div class="bg-card rounded-2xl overflow-hidden shadow-md mb-8 relative group parallax-item" data-parallax="0.05">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
+                    
+                    <div class="p-8">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
+                                1
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                                    <a href="#">Основы музыкальной регуляции стресса: что нужно знать</a>
+                                </h3>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Введение в ключевые понятия и термины, которые помогут понять, как музыка влияет на уровень стресса.
+                                </p>
+                                <div class="flex items-center text-gray-500">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        3 научных источника
+                                    </span>
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Чтение: 6 минут
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Шаг 2 -->
+                <div class="bg-card rounded-2xl overflow-hidden shadow-md mb-8 relative group parallax-item" data-parallax="0.05">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
+                    
+                    <div class="p-8">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
+                                2
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                                    <a href="#">Как определить, какая музыка снижает ваш стресс</a>
+                                </h3>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Практические методы для самостоятельного анализа того, как различные жанры и композиции влияют на ваш уровень стресса.
+                                </p>
+                                <div class="flex items-center text-gray-500">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Эксперимент 2024
+                                    </span>
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Чтение: 8 минут
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Шаг 3 -->
+                <div class="bg-card rounded-2xl overflow-hidden shadow-md relative group parallax-item" data-parallax="0.05">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
+                    
+                    <div class="p-8">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
+                                3
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                                    <a href="#">Создание персональных плейлистов для управления стрессом</a>
+                                </h3>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    Практические советы по составлению эффективных плейлистов для разных ситуаций: утренней рутины, работы и вечернего расслабления.
+                                </p>
+                                <div class="flex items-center text-gray-500">
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Рекомендации психологов
+                                    </span>
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Чтение: 9 минут
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Градиентный разделитель -->
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-scientific/20 to-transparent mb-20"></div>
+
+        <!-- Блок "Глубокие исследования" -->
+        <section class="mb-20">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl font-bold">Глубокие исследования</h2>
+                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
+                    Посмотреть все →
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="bg-card rounded-2xl overflow-hidden shadow-md p-8 relative group parallax-item" data-parallax="0.05">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-gradient-to-tr from-primary/5 to-transparent"></div>
+                    
+                    <div class="flex items-center mb-5">
+                        <span class="inline-block px-4 py-2 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Наука</span>
+                        <span class="inline-flex items-center px-4 py-2 rounded text-sm font-medium scientific-badge border border-primary/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Meta-анализ
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-5 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                        <a href="#">Нейропсихологические механизмы восприятия музыки: обзор последних исследований</a>
+                    </h3>
+                    
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Этот материал представляет собой синтез данных из 15 научных работ последних 3 лет о том, как музыка влияет на различные области мозга и нейротрансмиттерные системы.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            нейробиология
+                        </span>
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            исследования
+                        </span>
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            мозг
+                        </span>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-gray-100">
+                        <div class="flex items-center text-gray-500">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Author" class="w-10 h-10 rounded-full mr-3 object-cover">
+                            <span>Доктор психологических наук, 2024</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-card rounded-2xl overflow-hidden shadow-md p-8 relative group parallax-item" data-parallax="0.05">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-gradient-to-tr from-primary/5 to-transparent"></div>
+                    
+                    <div class="flex items-center mb-5">
+                        <span class="inline-block px-4 py-2 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Этномузыка</span>
+                        <span class="inline-flex items-center px-4 py-2 rounded text-sm font-medium scientific-badge border border-primary/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            7 источников
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-5 group-hover:gradient-text group-hover:animate-gradient transition-colors">
+                        <a href="#">Культурные различия в восприятии музыки: как этнические особенности влияют на психику</a>
+                    </h3>
+                    
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Исследование показывает, что одни и те же музыкальные элементы могут вызывать разные эмоциональные реакции у представителей разных культур из-за особенностей воспитания и социальных норм.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            культурная психология
+                        </span>
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            этномузыка
+                        </span>
+                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
+                            сравнительный анализ
+                        </span>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-gray-100">
+                        <div class="flex items-center text-gray-500">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Author" class="w-10 h-10 rounded-full mr-3 object-cover">
+                            <span>Исследовательский центр, 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок "Доверяют профессионалы" -->
+        <section class="mb-20 py-16 px-6 rounded-3xl relative overflow-hidden parallax-scroll" data-parallax="0.03">
+            <div class="absolute inset-0 bg-gray-50 -z-10"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 -z-10"></div>
+            <div class="absolute inset-0 opacity-5">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,25 Q50,15 100,25 T200,25 T300,25" fill="none" stroke="rgba(79, 70, 229, 0.1)" stroke-width="0.3" />
+                    <path d="M0,75 Q50,65 100,75 T200,75 T300,75" fill="none" stroke="rgba(139, 92, 246, 0.1)" stroke-width="0.3" />
+                </svg>
+            </div>
+            
+            <div class="text-center mb-12 relative">
+                <h2 class="text-3xl font-bold mb-4">Доверяют профессионалы</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Наши материалы рекомендуют психологи и используются в образовательных программах</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
+                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-primary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.097.267-4.238.476-6.423.605-1.08.064-2.162.049-3.25.049-1.088 0-2.178.015-3.265-.049-2.185-.13-4.327-.34-6.424-.605C1.262 18.386 1 17.444 1 16.35v-4.25m16.5 0a2.18 2.18 0 01.75 1.661c.041.317.062.638.062.96 0 1.186-.214 2.318-.6 3.36m.75 0a48.667 48.667 0 01-8.28 0c-1.04-.07-1.67-.65-1.67-1.616V14.15m16.5 0c0-1.059-.795-1.917-1.868-2.18a48.044 48.044 0 00-7.098 0C9.751 12.233 9 13.09 9 14.15v4.25c0 1.06.745 1.92 1.815 2.18m-16.5-.675c0-.414.148-.81.403-1.125.283-.34.636-.63.998-.871m16.5 2.493c-.255.315-.559.584-.903.787a48.294 48.294 0 01-3.341 1.44 48.148 48.148 0 01-6.441 0 48.294 48.294 0 01-3.341-1.44c-.344-.203-.648-.472-.903-.787M12 18.75a.75.75 0 100-1.5.75.75 0 000 1.5z" />
+                        </svg>
+                    </div>
+                    <p class="text-center text-lg font-medium">Ассоциация музыкальных терапевтов</p>
+                </div>
+                
+                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
+                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-secondary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9 9 0 01-12.728 0M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-center text-lg font-medium">Институт психологии РАН</p>
+                </div>
+                
+                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
+                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-primary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                    </div>
+                    <p class="text-center text-lg font-medium">Клиника "ПсихоМед"</p>
+                </div>
+                
+                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
+                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-secondary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-center text-lg font-medium">Университет им. Ломоносова</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 max-w-2xl mx-auto px-4">
+                <div class="relative inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary absolute -top-6 -left-6 opacity-10">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-secondary absolute -bottom-6 -right-6 opacity-10">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
+                    </svg>
+                    <p class="text-gray-600 italic text-lg px-8 py-6 relative">
+                        "Материалы MusicMind используются в качестве дополнительных источников в программе повышения квалификации психологов"
+                    </p>
+                </div>
+                <p class="text-gray-500 mt-4 text-lg">— д.псих.н., профессор кафедры клинической психологии</p>
+            </div>
+        </section>
+
+        <!-- Блок "5-дневный челлендж" -->
+        <section class="mb-20 challenge-card rounded-3xl p-10 relative overflow-hidden parallax-scroll" data-parallax="0.07">
+            <!-- Background Image and Overlay -->
+            <div class="absolute inset-0">
+                <img src="https://picsum.photos/seed/music-relaxation/1200/800" alt="Музыка для релаксации" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+            </div>
+            
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <span class="inline-block px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-lg font-medium rounded-full mb-6 animate-pulse-slow">
+                    Начните с этого
+                </span>
+                
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">5-дневный челлендж: улучшите психику через музыку</h2>
+                
+                <p class="text-gray-200 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
+                    Пройдите наш бесплатный курс и узнайте, как использовать музыку для снижения стресса, повышения продуктивности и улучшения сна.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-5">
+                    <a href="#" class="px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold text-lg rounded-xl shadow-md floating-button relative overflow-hidden group">
+                        <span class="relative z-10">Начать челлендж</span>
+                        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave"></span>
+                    </a>
+                    <a href="#" class="px-8 py-4 border border-white/50 text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-colors">
+                        Скачать гайд (PDF)
+                    </a>
+                </div>
+                
+                <div class="mt-8 text-gray-200 text-base">
+                    Уже <span class="font-bold text-white">12,437 человек</span> улучшили свое состояние с помощью этого челленджа
+                </div>
+            </div>
+        </section>
+      <!-- Подвал сайта -->
+      <section class="mb-20 py-16 px-6 rounded-3xl relative overflow-hidden parallax-scroll" data-parallax="0.03">
+               
+      <footer class="bg-white border-t border-gray-200">
+    <div class="container mx-auto px-6 py-14">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+            <!-- Логотип и описание -->
+            <div class="md:col-span-2">
+                <a href="#" class="flex items-center space-x-2 mb-4 group">
+                    <div class="w-10 h-10 rounded-full gradient-border p-0.5">
+                        <div class="w-full h-full rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v16M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent group-hover:animate-pulse-slow">MusicMind</span>
+                </a>
+                <p class="text-gray-700 mb-6">Научно-психологическое руководство по использованию музыки для улучшения психики — без воды, с плейлистами и объяснениями, как это работает.</p>
+                <div class="flex space-x-5">
+                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.122 3.122 0 0 1-.614-.057 3.282 3.282 0 0 0 3.067 2.277A6.588 6.588 0 0 1 0 13.734a3.282 3.282 0 0 0 2.945 2.229A6.612 6.612 0 0 1 .64 15.385 6.671 6.671 0 0 0 5.026 15z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 3.974 2.878 7.271 6.69 7.866v-5.588c-1.953.37-2.593-1.152-2.593-1.152-.351-.896-.845-1.135-.845-1.135-.683-.467.052-.458.052-.458.753.055 1.148.77 1.148.77.669 1.133 1.74 0.806 2.143.619.065-.48.26-.806.466-.984-1.64-.186-3.373-.819-3.373-3.605 0-.799.288-1.447.767-1.94.001-.001.002-.002.003-.003-.275-.673.075-1.745.794-1.745.451 0 .827.347.948.617.106.24.072.596-.028.83-.177.417-.53 1.03-.53 1.03.31-.09 1.18-.37 1.82-.37 1.55 0 2.67 1.153 2.67 2.65 0 1.5-.88 2.61-2.06 2.61-.73 0-1.36-.49-1.6-.92v-.01c0 0-.39 1.55.15 3.23 0 0 .99.3 3.23-.88 1.91.53 3.96.26 5.43-.75v-4.14z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+                            <path d="M15.997 8.002a8 8 0 1 1-15.995 0 8 8 0 0 1 15.995 0ZM9.007 12.615c-2.449 0-3.74-.876-3.74-2.06v-2.13h1.298v2.053c0 .81.576 1.298 1.396 1.298.8 0 1.297-.566 1.297-1.358v-2.05h1.297v3.342c0 1.36-.79 2.27-2.06 2.27Zm-2.574-6.17a1.63 1.63 0 1 1-.001-3.26 1.63 1.63 0 0 1 0 3.26Zm4.26 6.17h-1.297V9.27c0-.11-.01-.22-.03-.32h-.01c-.19.21-.48.33-.81.33-1.02 0-1.71-.82-1.71-2.05v-2.2h1.298v2.12c0 .62.43 1.01 1.08 1.01.67 0 1.08-.4 1.08-1.03v-2.1h1.297v5.445Z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Быстрые ссылки -->
+            <div>
+                <h3 class="text-lg font-bold mb-6 text-gray-900">Быстрые ссылки</h3>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Главная</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Эмоции</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Наука</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Блог</a></li>
+                </ul>
+            </div>
+            
+            <!-- Категории -->
+            <div>
+                <h3 class="text-lg font-bold mb-6 text-gray-900">Категории</h3>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Эмоциональная регуляция</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Снижение стресса</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Научные источники</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Партнерам</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="pt-8 mt-8 border-t border-gray-200">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-700 mb-4 md:mb-0">© 2024 MusicMind. Все права защищены. Этот сайт использует материалы в рамках добросовестного использования для образовательных целей.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-700 hover:text-primary hover:underline">Политика конфиденциальности</a>
+                    <a href="#" class="text-gray-700 hover:text-primary hover:underline">Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer> 
+
+</section>
+
+    </main>
+
+    <!-- Подвал сайта -->
+    
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Accessibility & Mobile Menu ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', !isHidden);
+            });
+
+            // --- Optimized Parallax Effect on Mouse Move ---
+            const parallaxItems = document.querySelectorAll('[data-parallax]');
+            // Only run on devices with fine pointers (mice) to save resources on touch devices
+            if (window.matchMedia('(pointer: fine)').matches) {
+                let mouseX = 0;
+                let mouseY = 0;
+                let isTicking = false;
+
+                const updateMousePosition = (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+
+                    if (!isTicking) {
+                        window.requestAnimationFrame(() => {
+                            parallaxItems.forEach(item => {
+                                const speed = parseFloat(item.getAttribute('data-parallax'));
+                                const x = (window.innerWidth - mouseX * speed) / 100;
+                                const y = (window.innerHeight - mouseY * speed) / 100;
+                                // Using translate3d hints the browser to use GPU acceleration
+                                item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                            });
+                            isTicking = false;
+                        });
+                        isTicking = true;
+                    }
+                };
+                document.addEventListener('mousemove', updateMousePosition);
+            }
+
+            // --- Animation on Scroll ---
+            const revealOnScroll = () => {
+                const reveals = document.querySelectorAll('.reveal, .parallax');
+                const windowHeight = window.innerHeight;
+                const elementVisible = 150;
+
+                for (let i = 0; i < reveals.length; i++) {
+                    const elementTop = reveals[i].getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[i].classList.add('active');
+                    }
+                }
+            };
+            
+            window.addEventListener('scroll', revealOnScroll);
+            window.addEventListener('load', revealOnScroll);
+            setTimeout(revealOnScroll, 100); // Initial check
+
+            // --- Goal Filtering Logic ---
+            const goalButtons = document.querySelectorAll('.goal-btn');
+            goalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    goalButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-primary/10', 'to-primary/5', 'text-primary');
+                        btn.classList.add('bg-gray-50', 'text-gray-700');
+                    });
+                    
+                    this.classList.remove('bg-gray-50', 'text-gray-700');
+                    this.classList.add('active', 'bg-gradient-to-r', 'from-primary/10', 'to-primary/5', 'text-primary');
+                    
+                    const goal = this.getAttribute('data-goal');
+                    document.querySelectorAll('.goal-content').forEach(content => {
+                        const contentGoals = content.getAttribute('data-goals');
+                        if (contentGoals.includes(goal) || contentGoals === 'all') {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            const initialGoalButton = document.querySelector('.goal-btn[data-goal="stress"]');
+            if (initialGoalButton) {
+                initialGoalButton.click();
+            }
+
+            // --- Parallax on Scroll ---
+            const parallaxScrollElements = document.querySelectorAll('.parallax-scroll');
+            const parallaxBackground = document.querySelector('.parallax-background');
+
+            const handleScrollParallax = () => {
+                const scrollPosition = window.pageYOffset;
+                
+                parallaxScrollElements.forEach(element => {
+                    const speed = 0.5;
+                    const yPos = -(scrollPosition * speed / 10);
+                    element.style.backgroundPosition = `center ${yPos}px`;
+                });
+
+                if (parallaxBackground) {
+                    const yPosBg = -(scrollPosition * 0.1);
+                    parallaxBackground.style.backgroundPosition = `center ${yPosBg}px`;
+                }
+            };
+            window.addEventListener('scroll', handleScrollParallax);
+
+            // --- Smooth Scrolling for Anchor Links ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href.length > 1) {
+                        try {
+                            const targetElement = document.querySelector(href);
+                            if (targetElement) {
+                                e.preventDefault();
+                                targetElement.scrollIntoView({
+                                    behavior: 'smooth'
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Invalid selector for smooth scroll:', href);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
