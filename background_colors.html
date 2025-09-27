@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цвета Сайта</title>
+    <style>
+        :root {
+            --primary-50: #FFF3E9;
+            --primary-100: #FFDCC8;
+            --primary-500: #E76A2E;
+            --primary-900: #5A230A;
+            
+            --secondary-50: #EEF3FF;
+            --secondary-100: #D7E1FF;
+            --secondary-500: #284B9C;
+            --secondary-900: #0E1B47;
+            
+            --neutral-50: #F7F7F9;
+            --neutral-100: #EDEFF2;
+            --neutral-500: #6B7280;
+            --neutral-900: #111827;
+            
+            --success: #16A34A;
+            --warning: #F59E0B;
+            --error: #DC2626;
+            --info: #2563EB;
+        }
+        body {
+            margin: 0;
+            padding: 1rem;
+            background-color: #F5F5F5;
+        }
+        .color-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .stripe {
+            height: 35px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="color-stack">
+        <div class="stripe" style="background-color: var(--primary-50);"></div>
+        <div class="stripe" style="background-color: var(--primary-100);"></div>
+        <div class="stripe" style="background-color: var(--primary-500);"></div>
+        <div class="stripe" style="background-color: var(--primary-900);"></div>
+        
+        <div class="stripe" style="background-color: var(--secondary-50);"></div>
+        <div class="stripe" style="background-color: var(--secondary-100);"></div>
+        <div class="stripe" style="background-color: var(--secondary-500);"></div>
+        <div class="stripe" style="background-color: var(--secondary-900);"></div>
+
+        <div class="stripe" style="background-color: var(--neutral-50);"></div>
+        <div class="stripe" style="background-color: var(--neutral-100);"></div>
+        <div class="stripe" style="background-color: var(--neutral-500);"></div>
+        <div class="stripe" style="background-color: var(--neutral-900);"></div>
+
+        <div class="stripe" style="background-color: var(--success);"></div>
+        <div class="stripe" style="background-color: var(--warning);"></div>
+        <div class="stripe" style="background-color: var(--error);"></div>
+        <div class="stripe" style="background-color: var(--info);"></div>
+    </div>
+</body>
+</html>

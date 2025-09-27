@@ -1,1469 +1,1072 @@
-<!DOCTYPE html>
-<html lang="ru" class="m-0 p-0">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicMind - Музыка и Психика</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#8B5CF6',
-                        background: '#F8FAFC',
-                        card: '#FFFFFF',
-                        scientific: '#0EA5E9',
-                        highlight: '#BFDBFE',
-                        text: '#1E293B',
-                        textSecondary: '#475569'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
-                    },
-                    backdropBlur: {
-                        'glass': '12px'
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'text-reveal': 'textReveal 1s forwards',
-                        'gradient': 'gradient 15s ease infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'parallax': 'parallax 20s linear infinite'
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' }
-                        },
-                        'text-reveal': {
-                            '0%': { width: '0%', opacity: '0' },
-                            '100%': { width: '100%', opacity: '1' }
-                        },
-                        gradient: {
-                            '0%': { 'background-position': '0% 50%' },
-                            '50%': { 'background-position': '100% 50%' },
-                            '100%': { 'background-position': '0% 50%' }
-                        },
-                        glow: {
-                            '0%': { 'text-shadow': '0 0 5px rgba(14, 165, 233, 0.5)' },
-                            '100%': { 'text-shadow': '0 0 15px rgba(14, 165, 233, 0.8)' }
-                        },
-                        parallax: {
-                            '0%': { transform: 'translateX(0) translateY(0)' },
-                            '100%': { transform: 'translateX(-50%) translateY(-10%)' }
-                        }
-                    },
-                    boxShadow: {
-                        'glass': '0 8px 32px rgba(0, 0, 0, 0.08)',
-                        'glass-hover': '0 12px 48px rgba(79, 70, 229, 0.2)'
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .glass-bg {
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.5);
-                border-radius: 16px;
-            }
-            
-            .hover-glow {
-                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            
-            .hover-glow:hover {
-                transform: translateY(-10px);
-                box-shadow: var(--tw-shadow, 0 0 #0000);
-                --tw-shadow: 0 20px 50px -10px rgba(79, 70, 229, 0.25);
-            }
-            
-            .scientific-badge {
-                background: linear-gradient(90deg, rgba(14, 165, 233, 0.1), rgba(139, 92, 246, 0.05));
-                color: #0EA5E9;
-                border: 1px solid rgba(14, 165, 233, 0.2);
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .scientific-badge::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 3px;
-                height: 100%;
-                background: linear-gradient(to bottom, #4F46E5, #8B5CF6);
-            }
-            
-            .gradient-text {
-                background: linear-gradient(90deg, #4F46E5, #8B5CF6, #0EA5E9);
-                -webkit-background-clip: text;
-                background-clip: text;
-                color: transparent;
-                background-size: 200% auto;
-            }
-            
-            .animate-gradient {
-                animation: gradient 8s linear infinite;
-            }
-            
-            .card-content {
-                transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            
-            .card-content:hover {
-                transform: scale(1.02);
-            }
-            
-            .music-note {
-                animation: float 6s ease-in-out infinite;
-                transform-origin: bottom center;
-            }
-            
-            .music-note:nth-child(2) {
-                animation-delay: 1.5s;
-            }
-            
-            .music-note:nth-child(3) {
-                animation-delay: 3s;
-            }
-            
-            .parallax {
-                transform: translateY(0);
-                transition: transform 0.3s ease-out;
-            }
-            
-            .gradient-border {
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .gradient-border::after {
-                content: '';
-                position: absolute;
-                top: -2px;
-                left: -2px;
-                right: -2px;
-                bottom: -2px;
-                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9, #4F46E5);
-                background-size: 400% 400%;
-                animation: gradient 15s ease infinite;
-                z-index: -1;
-                border-radius: inherit;
-            }
-            
-            .reveal {
-                opacity: 0;
-                transform: translateY(20px);
-                transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-            }
-            
-            .reveal.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            
-            .category-tag {
-                transition: all 0.3s ease;
-            }
-            
-            .category-tag:hover {
-                transform: scale(1.05);
-                background: linear-gradient(90deg, rgba(79, 70, 229, 0.1), rgba(139, 92, 246, 0.1));
-                border-color: rgba(139, 92, 246, 0.3);
-            }
-            
-            .floating {
-                animation: float 6s ease-in-out infinite;
-            }
-            
-            .floating:nth-child(2) {
-                animation-delay: 2s;
-            }
-            
-            .floating:nth-child(3) {
-                animation-delay: 4s;
-            }
-            
-            .sound-wave {
-                height: 1px;
-                background: linear-gradient(90deg, 
-                    transparent, 
-                    #4F46E5, 
-                    #8B5CF6,
-                    #4F46E5,
-                    transparent);
-                background-size: 300% 100%;
-                animation: waveAnimation 5s infinite;
-            }
-            
-            @keyframes waveAnimation {
-                0% { background-position: 100% 50%; }
-                100% { background-position: -100% 50%; }
-            }
-            
-            .glow-effect {
-                text-shadow: 0 0 8px rgba(14, 165, 233, 0.15);
-            }
-            
-            .hero-gradient {
-                background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #F8FAFC 100%);
-            }
-            
-            .card-hover::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                border-radius: 16px;
-                padding: 1px;
-                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9);
-                -webkit-mask: 
-                    linear-gradient(#fff 0 0) content-box, 
-                    linear-gradient(#fff 0 0);
-                -webkit-mask-composite: xor;
-                mask-composite: exclude;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            
-            .card-hover:hover::before {
-                opacity: 1;
-            }
-            
-            .highlight {
-                position: relative;
-            }
-            
-            .highlight::after {
-                content: '';
-                position: absolute;
-                bottom: -2px;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: linear-gradient(90deg, #4F46E5, #8B5CF6);
-                transform: scaleX(0);
-                transform-origin: right;
-                transition: transform 0.3s ease;
-            }
-            
-            .highlight:hover::after {
-                transform: scaleX(1);
-                transform-origin: left;
-            }
-            
-            .floating-button {
-                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-                transform: translateY(0);
-            }
-            
-            .floating-button:hover {
-                transform: translateY(-5px);
-            }
-            
-            .floating-button::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                border-radius: 12px;
-                background: linear-gradient(45deg, #4F46E5, #8B5CF6, #0EA5E9);
-                opacity: 0;
-                z-index: -1;
-                transition: opacity 0.3s ease;
-            }
-            
-            .floating-button:hover::after {
-                opacity: 1;
-            }
-            
-            .testimonial-card {
-                transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            
-            .testimonial-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
-            }
-            
-            .challenge-card {
-                background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(240, 245, 255, 0.8));
-                border: 1px solid rgba(14, 165, 233, 0.1);
-            }
-            
-            .challenge-card:hover {
-                transform: translateY(-8px);
-                border-color: rgba(14, 165, 233, 0.25);
-                box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
-            }
-            
-            .parallax-container {
-                perspective: 1000px;
-            }
-            
-            .parallax-layer {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-            }
-            
-            .parallax-content {
-                position: relative;
-                z-index: 10;
-            }
-            
-            .floating-element {
-                animation: float 8s ease-in-out infinite;
-            }
-            
-            .floating-element:nth-child(2) {
-                animation-delay: 2s;
-            }
-            
-            .floating-element:nth-child(3) {
-                animation-delay: 4s;
-            }
-            
-            .music-pattern {
-                background-image: 
-                    radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.03) 0%, transparent 20%),
-                    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 20%);
-                background-size: 200px 200px;
-            }
-            
-            .cursor-dot {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                background: rgba(14, 165, 233, 0.6);
-                pointer-events: none;
-                transform: translate(-50%, -50%);
-                z-index: 9999;
-                mix-blend-mode: screen;
-                transition: width 0.2s, height 0.2s;
-            }
-            
-            .cursor-outline {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 40px;
-                height: 40px;
-                border: 2px solid rgba(14, 165, 233, 0.2);
-                border-radius: 50%;
-                pointer-events: none;
-                transform: translate(-50%, -50%);
-                z-index: 9998;
-                transition: width 0.3s, height 0.3s, border-color 0.3s;
-            }
-            
-            .highlight-on-hover {
-                transition: all 0.3s ease;
-            }
-            
-            .highlight-on-hover:hover {
-                background: rgba(14, 165, 233, 0.05);
-                border-color: rgba(14, 165, 233, 0.15);
-            }
-            
-            .parallax-effect {
-                transition: transform 0.1s ease-out;
-            }
-            
-            .parallax-item {
-                transition: transform 0.3s ease-out;
-            }
-            
-            .parallax-scene {
-                overflow: hidden;
-                position: relative;
-            }
-            
-            .parallax-background {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 Q40,5 60,20 T100,20" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.5"/><path d="M20,50 Q40,35 60,50 T100,50" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.3"/><path d="M20,80 Q40,65 60,80 T100,80" fill="none" stroke="%23BFDBFE" stroke-width="0.5" opacity="0.2"/></svg>');
-                background-size: 200px 200px;
-                z-index: -1;
-            }
-            
-            .parallax-foreground {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%234F46E5" opacity="0.2"/><circle cx="50" cy="50" r="3" fill="%238B5CF6" opacity="0.2"/><circle cx="80" cy="80" r="2" fill="%230EA5E9" opacity="0.2"/></svg>');
-                background-size: 150px 150px;
-                z-index: -1;
-            }
-            
-            .floating-icon {
-                animation: float 8s ease-in-out infinite;
-                position: absolute;
-                opacity: 0.1;
-            }
-            
-            .floating-icon:nth-child(1) {
-                top: 15%;
-                left: 10%;
-                animation-delay: 0s;
-            }
-            
-            .floating-icon:nth-child(2) {
-                top: 30%;
-                right: 15%;
-                animation-delay: 2s;
-            }
-            
-            .floating-icon:nth-child(3) {
-                bottom: 25%;
-                left: 20%;
-                animation-delay: 4s;
-            }
-            
-            .floating-icon:nth-child(4) {
-                bottom: 15%;
-                right: 10%;
-                animation-delay: 6s;
-            }
-            
-            .floating-icon svg {
-                width: 40px;
-                height: 40px;
-                fill: none;
-                stroke: #4F46E5;
-            }
-            
-                        .parallax-scroll {
-                transition: transform 0.1s ease-out;
-            }
-        }
-    </style>
-        @layer components {
-                .sequential-steps::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    left: 51px; /* Adjust for line thickness */
-                    width: 2px;
-                    background: repeating-linear-gradient(to bottom, #BFDBFE, #BFDBFE 5px, transparent 5px, transparent 10px);
-                    z-index: -1;
-                }
-
-                /* Adjust for mobile/smaller screens */
-                @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller */
-                    .sequential-steps::before {
-                        left: 67px; /* Adjust for line thickness */
-                    }
-                }
-            }
-        }
-    </style>
-</head>
-<body class="font-sans bg-background text-text overflow-x-hidden relative m-0 p-0">
-    <!-- Кастомный курсор (удален для производительности и доступности) -->
+﻿<!doctype html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bimmunal | Иммунитет на основе органического йода — Официальный сайт</title>
+    <meta name="description" content="Официальный сайт Bimmunal и Immuniti — органический йод с микроэлементами для поддержки иммунитета и восполнения йода. Узнайте о продукции, инструкциях и заказе онлайн.">
+    <link rel="canonical" href="https://www.example.com/">
     
-    <!-- Анимированный фон с частицами -->
-    <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute inset-0 hero-gradient"></div>
-        <div class="absolute inset-0 opacity-30 music-pattern"></div>
-        
-        <!-- Параллакс-сцена -->
-        <div class="parallax-scene w-full h-full">
-            <div class="parallax-background w-full h-full"></div>
-            <div class="parallax-foreground w-full h-full"></div>
-            
-            <!-- Плавающие музыкальные иконки -->
-            <div class="floating-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 18.75H18a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0022.5 4.5h-2.818c-.597.000-1.185.03-1.758.087m-2.044.289a48.474 48.474 0 00-6.38-1.372m-12.636 18.369A48.469 48.469 0 0112 21c5.385 0 10.5-1.964 14.125-5.383" />
-                </svg>
-            </div>
-            <div class="floating-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                </svg>
-            </div>
-            <div class="floating-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.125 16.772a9 9 0 00-9.125-9.125 9.125 9.125 0 01-.193 1.737A6 6 0 006 18.748m3.889-2.772a3 3 0 003.462-6.571m-3.462 6.571a4.5 4.5 0 01-5.105-3.172 4.5 4.5 0 00-1.3-1.3 3 3 0 00-3.462 6.571 3 3 0 013.462-6.571 4.5 4.5 0 001.3 1.3 3 3 0 01.645 4.914" />
-                </svg>
-            </div>
-            <div class="floating-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
-                </svg>
-            </div>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.example.com/">
+    <meta property="og:title" content="Bimmunal | Иммунитет на основе органического йода">
+    <meta property="og:description" content="Органический йод с микроэлементами для поддержки иммунитета и восполнения йода. Натуральные формулы Bimmunal и Immuniti.">
+    <meta property="og:image" content="https://www.example.com/assets/images/mak.jpeg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.example.com/">
+    <meta property="twitter:title" content="Bimmunal | Иммунитет на основе органического йода">
+    <meta property="twitter:description" content="Органический йод с микроэлементами для поддержки иммунитета и восполнения йода. Натуральные формулы Bimmunal и Immuniti.">
+    <meta property="twitter:image" content="https://www.example.com/assets/images/mak.jpeg">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Bimmunal",
+      "url": "https://www.example.com/",
+      "logo": "https://www.example.com/assets/images/logo.png",
+      "description": "Органический йод с микроэлементами для поддержки иммунитета и восполнения йода.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+7-727-123-45-67",
+        "contactType": "customer service"
+      }
+    }
+    </script>
+    
+    <link rel="stylesheet" href="src/css/main.css">
+    
+  </head>
+  <body class="bg-bg-primary text-neutral-900 font-sans antialiased">
+    <!-- Skip to main content link for keyboard navigation -->
+    <a href="#hero" class="skip-link" style="position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; transition: top 0.3s;">Перейти к основному содержимому</a>
+    <!-- Top Bar -->
+    <div class="top-bar hidden md:block">
+      <div class="container px-16 md:px-24">
+        <div class="top-bar__content">
+          <div class="top-bar__left">
+            <span class="top-bar__text">Работаем ежедневно 9:00-18:00</span>
+          </div>
+          <div class="top-bar__right">
+            <a href="tel:+77271234567" class="top-bar__phone">
+              <span class="icon-phone icon--sm"></span>
+              <span>+7 (727) 123-45-67</span>
+            </a>
+            <a href="mailto:info@stekoltd.com" class="top-bar__email">
+              <span class="icon-mail icon--sm"></span>
+              <span>info@stekoltd.com</span>
+            </a>
+          </div>
         </div>
+      </div>
     </div>
-
-    <!-- Шапка сайта -->
-    <header class="bg-card shadow-md absolute top-0 left-0 right-0 z-50 border border-gray-100/50 shadow-sm">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Логотип -->
-                <a href="#" class="flex items-center space-x-2 group">
-                    <div class="w-10 h-10 rounded-full gradient-border p-0.5">
-                        <div class="w-full h-full rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center group-hover:animate-spin-slow">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="text-xl font-bold text-gray-900 group-hover:gradient-text group-hover:animate-gradient">MusicMind</span>
-                </a>
-
-                <!-- Основное меню -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <div class="relative group">
-                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Главная</a>
-                    </div>
-                    
-                    <div class="relative group">
-                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
-                            Эмоции
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
-                            <div class="py-2">
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Эмоциональная регуляция</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Музыкальные предпочтения</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Эмоции в музыке</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Преодоление негативных эмоций</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="relative group">
-                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
-                            Здоровье
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
-                            <div class="py-2">
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Снижение стресса</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Тревожность</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Депрессия</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Терапия</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="relative group">
-                        <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors flex items-center">
-                            Повседневность
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 opacity-70">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 mt-3 w-56 rounded-xl bg-white shadow-xl border border-gray-100/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 group-hover:translate-y-1">
-                            <div class="py-2">
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Продуктивность</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Сон</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Учеба</a>
-                                <a href="#" class="block px-5 py-2.5 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors">Социум</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Наука</a>
-                    <a href="#" class="px-4 py-2 font-medium text-gray-600 hover:text-primary transition-colors">Блог</a>
-                </nav>
-
-                <!-- Мобильное меню -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary" aria-controls="mobile-menu" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Мобильное меню (скрыто по умолчанию) -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-3 border-t border-gray-100/50">
-                <div class="flex flex-col space-y-2">
-                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Главная</a>
-                    
-                    <div class="pl-3 border-l-2 border-primary">
-                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Эмоции</a>
-                        <div class="ml-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Эмоциональная регуляция</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Музыкальные предпочтения</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Эмоции в музыке</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Преодоление негативных эмоций</a>
-                        </div>
-                    </div>
-                    
-                    <div class="pl-3 border-l-2 border-primary">
-                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Здоровье</a>
-                        <div class="ml-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Снижение стресса</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Тревожность</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Депрессия</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Терапия</a>
-                        </div>
-                    </div>
-                    
-                    <div class="pl-3 border-l-2 border-primary">
-                        <a href="#" class="block px-4 py-2 font-medium text-gray-900">Повседневность</a>
-                        <div class="ml-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Продуктивность</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Сон</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Учеба</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg">Социум</a>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Наука</a>
-                    <a href="#" class="px-4 py-2 text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50">Блог</a>
-                </div>
-            </div>
+    
+    <!-- Main Navbar -->
+    <header id="navbar" class="navbar sticky top-0 z-50 bg-white border-b border-neutral-100 shadow-on-scroll" role="banner" aria-label="Главная навигация">
+      <div class="navbar__container">
+        <div class="navbar__content">
+          <!-- Logo -->
+          <div class="navbar__brand">
+            <button class="navbar__menu-btn md:hidden" aria-label="Открыть меню" data-target="#offcanvas-menu">
+              <span class="icon-menu icon--md" aria-hidden="true"></span>
+            </button>
+            <a href="#hero" class="logo-steko">
+              <span class="logo-main">Steko</span><span class="logo-ltd">LTD</span>
+            </a>
+          </div>
+          
+          <!-- Desktop Navigation -->
+          <nav class="navbar__nav hidden md:block" aria-label="Основное меню">
+            <ul class="navbar__nav-list">
+              <li><a class="navbar__nav-link" href="#hero">Главная</a></li>
+              <!-- Products dropdown -->
+              <li class="navbar__nav-item navbar__nav-item--dropdown">
+                <button class="navbar__nav-link navbar__nav-link--has-dropdown" aria-expanded="false" aria-haspopup="true">
+                  Продукция
+                  <span class="navbar__nav-dropdown-arrow icon-chevron-down icon--sm"></span>
+                </button>
+                <ul class="navbar__nav-dropdown" aria-hidden="true">
+                  <li><a class="navbar__nav-dropdown-link" href="products/bimmunal-50.html"><span class="icon-leaf icon--sm"></span><span>BIMUNNAL — 50 мл</span></a></li>
+                  <li><a class="navbar__nav-dropdown-link" href="/products/immuniti-100"><span class="icon-shield-check icon--sm"></span><span>IMMUNITY — 100 таблеток</span></a></li>
+                  <li><a class="navbar__nav-dropdown-link" href="/products/bimmunal-ointment"><span class="icon-heart-pulse icon--sm"></span><span>BIMUNNAL M — мазь 70 мл</span></a></li>
+                </ul>
+              </li>
+              <li><a class="navbar__nav-link" href="/about">О компании</a></li>
+              <li><a class="navbar__nav-link" href="/blog">Наука</a></li>
+              <li><a class="navbar__nav-link" href="/contacts">Контакты</a></li>
+            </ul>
+          </nav>
+          
+          <!-- Actions -->
+          <div class="navbar__actions">
+            <a class="btn btn--primary btn--sm hidden lg:inline-flex" href="/cart">Купить</a>
+            <button class="btn-icon" aria-label="Корзина">
+              <span class="icon-cart icon--md" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
+      </div>
+      <!-- Offcanvas mobile menu -->
+      <div id="offcanvas-menu" class="offcanvas" aria-hidden="true">
+        <div class="offcanvas-backdrop" data-close></div>
+        <div class="offcanvas-panel" lang="ru">
+          <div class="flex items-center justify-between">
+            <a href="#hero" class="logo-steko">
+              <span class="logo-main">Steko</span><span class="logo-ltd">LTD</span>
+            </a>
+            <button class="btn-icon" aria-label="Закрыть меню" data-close>
+              <span class="icon-close icon--md" aria-hidden="true"></span>
+            </button>
+          </div>
+          <nav class="mt-16" aria-label="Мобильное меню">
+            <a class="nav-mobile" href="#hero">Главная</a>
+            <!-- Products dropdown -->
+            <div class="nav-mobile-dropdown">
+              <button class="nav-mobile nav-mobile--has-dropdown" aria-expanded="false">
+                Продукция
+                <span class="nav-mobile__arrow icon-chevron-down icon--sm"></span>
+              </button>
+              <div class="nav-mobile-dropdown__content" aria-hidden="true">
+                <a class="nav-mobile nav-mobile--sub" href="products/bimmunal-50.html">BIMUNNAL — 50 мл</a>
+                <a class="nav-mobile nav-mobile--sub" href="/products/immuniti-100">IMMUNITY — 100 таблеток</a>
+                <a class="nav-mobile nav-mobile--sub" href="/products/bimmunal-ointment">BIMUNNAL M — мазь 70 мл</a>
+              </div>
+            </div>
+            <a class="nav-mobile" href="/about">О компании</a>
+            <a class="nav-mobile" href="/blog">Наука</a>
+            <a class="nav-mobile" href="/contacts">Контакты</a>
+          </nav>
+          <div class="mt-20">
+            <a href="tel:+77271234567" class="block text-16 font-500">+7 (727) 123-45-67</a>
+            <div class="text-12 text-neutral-500">9:00–18:00 (Пн–Пт)</div>
+          </div>
+          <a class="btn btn--primary w-full mt-16" href="/cart" aria-label="Купить продукцию">Купить</a>
+        </div>
+      </div>
     </header>
 
-    <!-- Основной контент -->
-    <main class="container mx-auto px-4 py-8 relative pt-16">
-        <!-- Верхняя секция с решением проблемы -->
-        <section class="text-center mb-16 max-w-5xl mx-auto relative parallax-scroll" data-parallax="0.1">
-            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary opacity-10 floating"></div>
-            <div class="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-gradient-to-r from-secondary to-scientific opacity-10 floating"></div>
-            
-            <span class="inline-block px-5 py-2.5 bg-gray-50 text-scientific text-sm font-medium rounded-full mb-6 border border-scientific/20 highlight-on-hover">
-                Научно-психологическое руководство
-            </span>
-            
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 relative">
-                <span class="block mb-4">Как использовать музыку</span>
-                <span class="gradient-text animate-gradient text-5xl md:text-6xl lg:text-7xl">для улучшения психического здоровья</span>
-                <span class="block mt-4 text-3xl md:text-4xl lg:text-5xl glow-effect">научно обоснованные методы без воды</span>
-            </h1>
-            
-            <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Наши материалы основаны на исследованиях музыкальной психологии 2020-2024 гг. и проверены практикой. 
-                Более 15 научных работ легли в основу наших рекомендаций.
-            </p>
-            
-            <div class="flex justify-center space-x-4 mt-6">
-                <a href="#" class="px-7 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-md floating-button hover:shadow-primary/20 transition-all">
-                    Начать изучение
-                </a>
-                <a href="#" class="px-7 py-4 border border-scientific/30 text-scientific font-bold rounded-xl hover:bg-scientific/5 transition-colors">
-                    Посмотреть научные источники
-                </a>
-            </div>
-        </section>
-
-        <!-- Упрощенный выбор цели -->
-        <section class="mb-20 relative parallax-scroll" data-parallax="0.05">
-            <div class="absolute inset-0 bg-gray-50 rounded-3xl -z-10"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-3xl -z-10"></div>
-            
-            <div class="text-center mb-10 relative">
-                <h2 class="text-3xl font-bold mb-4">С чего начать?</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Выберите вашу основную цель — мы покажем самые релевантные материалы</p>
-            </div>
-            
-            <div class="flex flex-wrap justify-center gap-5 mb-12 relative">
-                <button class="goal-btn px-8 py-4 bg-gradient-to-r from-primary/10 to-primary/5 text-primary rounded-2xl font-bold text-lg border border-primary/20 active relative overflow-hidden group" data-goal="stress">
-                    <span class="relative z-10">Снизить стресс</span>
-                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
-                </button>
-                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="productivity">
-                    <span class="relative z-10">Повысить продуктивность</span>
-                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
-                </button>
-                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="sleep">
-                    <span class="relative z-10">Улучшить сон</span>
-                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
-                </button>
-                <button class="goal-btn px-8 py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-lg border border-gray-200 hover:border-primary/30 transition-colors group" data-goal="emotions">
-                    <span class="relative z-10">Понять эмоции</span>
-                    <span class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-wave group-hover:animate-wave-slow"></span>
-                </button>
-            </div>
-            
-            <div class="flex justify-center">
-                <div class="w-16 h-3 rounded-full bg-gradient-to-r from-primary to-secondary"></div>
-            </div>
-        </section>
-
-        <!-- Звуковая волна разделитель -->
-        <div class="sound-wave mb-16 max-w-4xl mx-auto"></div>
-
-        <!-- ТОП-3 evergreen материала с научной базой -->
-        <section class="mb-20 goal-content active" data-goals="all stress">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold">ТОП-3 научно обоснованных материала</h2>
-                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
-                    Посмотреть все →
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
-                    </svg>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Карточка 1 -->
-                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
-                    
-                    
-                    <div class="relative">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Музыка для снижения тревожности" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                        
-                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex">
-                            <i class="bi bi-music-note-beamed text-2xl"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="p-8 pt-6 card-content">
-                        <div class="flex items-center mb-4">
-                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Ментальное здоровье</span>
-                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                На основе 15 исследований
-                            </span>
-                        </div>
-                        
-                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                            <a href="#">10 научно доказанных способов использовать музыку для снижения тревожности</a>
-                        </h3>
-                        
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            Узнайте, какие жанры и темпы действительно работают против тревоги согласно последним исследованиям 2024 года.
-                        </p>
-                        
-                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Чтение: 8 минут
-                            </div>
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                1.2K
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Карточка 2 -->
-                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
-                    
-                    
-                    <div class="relative">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://picsum.photos/seed/productivity/600/480" alt="Музыка для продуктивности" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                        
-                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex" style="animation-delay: 0.3s">
-                            <i class="bi bi-music-note-beamed text-2xl"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="p-8 pt-6 card-content">
-                        <div class="flex items-center mb-4">
-                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Повседневная жизнь</span>
-                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                8 научных источников
-                            </span>
-                        </div>
-                        
-                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                            <a href="#">Как подобрать идеальный плейлист для работы: руководство по нейропсихологии</a>
-                        </h3>
-                        
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            Научитесь создавать плейлисты, которые увеличат вашу продуктивность на 40% без потери качества работы.
-                        </p>
-                        
-                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Чтение: 10 минут
-                            </div>
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                980
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Карточка 3 -->
-                <div class="bg-card rounded-2xl shadow-md card-hover hover-glow relative group parallax-item" data-parallax="0.05">
-                    
-                    
-                    <div class="relative">
-                        <div class="h-48 overflow-hidden">
-                            <img src="https://picsum.photos/seed/sleep/600/480" alt="Музыка и сон" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                        
-                        <div class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary items-center justify-center text-white shadow-lg z-10 transition-transform duration-300 group-hover:scale-125 hidden md:flex" style="animation-delay: 0.6s">
-                            <i class="bi bi-music-note-beamed text-2xl"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="p-8 pt-6 card-content">
-                        <div class="flex items-center mb-4">
-                            <span class="inline-block px-4 py-1.5 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Ментальное здоровье</span>
-                            <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium scientific-badge border border-primary/20">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Meta-анализ 2023
-                            </span>
-                        </div>
-                        
-                        <h3 class="text-2xl font-bold mb-4 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                            <a href="#">Музыка перед сном: что работает на самом деле (исследования 2024)</a>
-                        </h3>
-                        
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            Узнайте, какие мелодии действительно улучшают качество сна, а какие могут навредить вашему циркадному ритму.
-                        </p>
-                        
-                        <div class="flex items-center justify-between text-gray-500 pt-4 border-t border-gray-100">
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Чтение: 7 минут
-                            </div>
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                1.5K
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок "Читают сейчас" -->
-        <section class="mb-20">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold">Читают сейчас</h2>
-                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
-                    Посмотреть все →
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
-                    </svg>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Card 1: Image Background Layout -->
-                <div class="relative rounded-2xl overflow-hidden shadow-lg group hover-glow h-80 parallax-item" data-parallax="0.05">
-                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Эмоции" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
-                    <div class="relative h-full flex flex-col justify-end p-6 text-white">
-                        <div class="flex items-center mb-3">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20 mr-2">
-                                5 исследований
-                            </span>
-                            <span class="text-gray-300 text-xs">· 2 дня назад</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">
-                            <a href="#" class="hover:underline">Как музыка влияет на эмоциональную регуляцию: научное исследование</a>
-                        </h3>
-                        <p class="text-gray-200 text-sm leading-relaxed opacity-80">
-                            Узнайте, как определенные музыкальные элементы активируют области мозга, отвечающие за эмоции.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Card 2: Image Background Layout -->
-                <div class="relative rounded-2xl overflow-hidden shadow-lg group hover-glow h-80 parallax-item" data-parallax="0.05">
-                    <img src="https://picsum.photos/seed/music-therapy/600/800" alt="Терапия" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
-                    <div class="relative h-full flex flex-col justify-end p-6 text-white">
-                        <div class="flex items-center mb-3">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20 mr-2">
-                                Meta-анализ
-                            </span>
-                            <span class="text-gray-300 text-xs">· вчера</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">
-                            <a href="#" class="hover:underline">Музыкальная терапия в домашних условиях: практическое руководство</a>
-                        </h3>
-                        <p class="text-gray-200 text-sm leading-relaxed opacity-80">
-                            Пошаговые упражнения, которые вы можете начать применять уже сегодня для улучшения психического здоровья.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок "Начните с основ" -->
-        <section class="mb-20 goal-content active" data-goals="all stress">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">Начните с основ</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Последовательная цепочка материалов для тех, кто хочет снизить стресс с помощью музыки</p>
-            </div>
-            
-            <div class="max-w-3xl mx-auto">
-                <!-- Шаг 1 -->
-                <div class="bg-card rounded-2xl overflow-hidden shadow-md mb-8 relative group parallax-item" data-parallax="0.05">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
-                    
-                    <div class="p-8">
-                        <div class="flex items-start">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
-                                1
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                                    <a href="#">Основы музыкальной регуляции стресса: что нужно знать</a>
-                                </h3>
-                                <p class="text-gray-600 mb-4 leading-relaxed">
-                                    Введение в ключевые понятия и термины, которые помогут понять, как музыка влияет на уровень стресса.
-                                </p>
-                                <div class="flex items-center text-gray-500">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        3 научных источника
-                                    </span>
-                                    <span class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Чтение: 6 минут
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Шаг 2 -->
-                <div class="bg-card rounded-2xl overflow-hidden shadow-md mb-8 relative group parallax-item" data-parallax="0.05">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
-                    
-                    <div class="p-8">
-                        <div class="flex items-start">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
-                                2
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                                    <a href="#">Как определить, какая музыка снижает ваш стресс</a>
-                                </h3>
-                                <p class="text-gray-600 mb-4 leading-relaxed">
-                                    Практические методы для самостоятельного анализа того, как различные жанры и композиции влияют на ваш уровень стресса.
-                                </p>
-                                <div class="flex items-center text-gray-500">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Эксперимент 2024
-                                    </span>
-                                    <span class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Чтение: 8 минут
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Шаг 3 -->
-                <div class="bg-card rounded-2xl overflow-hidden shadow-md relative group parallax-item" data-parallax="0.05">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary rounded-l-full"></div>
-                    
-                    <div class="p-8">
-                        <div class="flex items-start">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold mr-5 flex-shrink-0 mt-1 text-lg">
-                                3
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold mb-3 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                                    <a href="#">Создание персональных плейлистов для управления стрессом</a>
-                                </h3>
-                                <p class="text-gray-600 mb-4 leading-relaxed">
-                                    Практические советы по составлению эффективных плейлистов для разных ситуаций: утренней рутины, работы и вечернего расслабления.
-                                </p>
-                                <div class="flex items-center text-gray-500">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium scientific-badge border border-primary/20 mr-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Рекомендации психологов
-                                    </span>
-                                    <span class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1.5 opacity-70">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Чтение: 9 минут
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Градиентный разделитель -->
-        <div class="h-px w-full bg-gradient-to-r from-transparent via-scientific/20 to-transparent mb-20"></div>
-
-        <!-- Блок "Глубокие исследования" -->
-        <section class="mb-20">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold">Глубокие исследования</h2>
-                <a href="#" class="text-scientific font-medium hover:underline flex items-center text-lg group">
-                    Посмотреть все →
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M3.75 12h16.5" />
-                    </svg>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="bg-card rounded-2xl overflow-hidden shadow-md p-8 relative group parallax-item" data-parallax="0.05">
-                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-gradient-to-tr from-primary/5 to-transparent"></div>
-                    
-                    <div class="flex items-center mb-5">
-                        <span class="inline-block px-4 py-2 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Наука</span>
-                        <span class="inline-flex items-center px-4 py-2 rounded text-sm font-medium scientific-badge border border-primary/20">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Meta-анализ
-                        </span>
-                    </div>
-                    
-                    <h3 class="text-2xl font-bold mb-5 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                        <a href="#">Нейропсихологические механизмы восприятия музыки: обзор последних исследований</a>
-                    </h3>
-                    
-                    <p class="text-gray-600 mb-6 leading-relaxed">
-                        Этот материал представляет собой синтез данных из 15 научных работ последних 3 лет о том, как музыка влияет на различные области мозга и нейротрансмиттерные системы.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-3 mb-6">
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            нейробиология
-                        </span>
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            исследования
-                        </span>
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            мозг
-                        </span>
-                    </div>
-                    
-                    <div class="pt-6 border-t border-gray-100">
-                        <div class="flex items-center text-gray-500">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Author" class="w-10 h-10 rounded-full mr-3 object-cover">
-                            <span>Доктор психологических наук, 2024</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-card rounded-2xl overflow-hidden shadow-md p-8 relative group parallax-item" data-parallax="0.05">
-                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-gradient-to-tr from-primary/5 to-transparent"></div>
-                    
-                    <div class="flex items-center mb-5">
-                        <span class="inline-block px-4 py-2 bg-gray-50 text-gray-600 text-sm font-medium rounded-full mr-3 border border-gray-200">Этномузыка</span>
-                        <span class="inline-flex items-center px-4 py-2 rounded text-sm font-medium scientific-badge border border-primary/20">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            7 источников
-                        </span>
-                    </div>
-                    
-                    <h3 class="text-2xl font-bold mb-5 group-hover:gradient-text group-hover:animate-gradient transition-colors">
-                        <a href="#">Культурные различия в восприятии музыки: как этнические особенности влияют на психику</a>
-                    </h3>
-                    
-                    <p class="text-gray-600 mb-6 leading-relaxed">
-                        Исследование показывает, что одни и те же музыкальные элементы могут вызывать разные эмоциональные реакции у представителей разных культур из-за особенностей воспитания и социальных норм.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-3 mb-6">
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            культурная психология
-                        </span>
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            этномузыка
-                        </span>
-                        <span class="px-4 py-2 bg-gray-50 text-gray-600 text-sm rounded-full hover:bg-primary/5 hover:text-primary transition-colors cursor-pointer border border-gray-200 category-tag">
-                            сравнительный анализ
-                        </span>
-                    </div>
-                    
-                    <div class="pt-6 border-t border-gray-100">
-                        <div class="flex items-center text-gray-500">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Author" class="w-10 h-10 rounded-full mr-3 object-cover">
-                            <span>Исследовательский центр, 2023</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок "Доверяют профессионалы" -->
-        <section class="mb-20 py-16 px-6 rounded-3xl relative overflow-hidden parallax-scroll" data-parallax="0.03">
-            <div class="absolute inset-0 bg-gray-50 -z-10"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 -z-10"></div>
-            <div class="absolute inset-0 opacity-5">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0,25 Q50,15 100,25 T200,25 T300,25" fill="none" stroke="rgba(79, 70, 229, 0.1)" stroke-width="0.3" />
-                    <path d="M0,75 Q50,65 100,75 T200,75 T300,75" fill="none" stroke="rgba(139, 92, 246, 0.1)" stroke-width="0.3" />
-                </svg>
-            </div>
-            
-            <div class="text-center mb-12 relative">
-                <h2 class="text-3xl font-bold mb-4">Доверяют профессионалы</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Наши материалы рекомендуют психологи и используются в образовательных программах</p>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
-                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-primary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.097.267-4.238.476-6.423.605-1.08.064-2.162.049-3.25.049-1.088 0-2.178.015-3.265-.049-2.185-.13-4.327-.34-6.424-.605C1.262 18.386 1 17.444 1 16.35v-4.25m16.5 0a2.18 2.18 0 01.75 1.661c.041.317.062.638.062.96 0 1.186-.214 2.318-.6 3.36m.75 0a48.667 48.667 0 01-8.28 0c-1.04-.07-1.67-.65-1.67-1.616V14.15m16.5 0c0-1.059-.795-1.917-1.868-2.18a48.044 48.044 0 00-7.098 0C9.751 12.233 9 13.09 9 14.15v4.25c0 1.06.745 1.92 1.815 2.18m-16.5-.675c0-.414.148-.81.403-1.125.283-.34.636-.63.998-.871m16.5 2.493c-.255.315-.559.584-.903.787a48.294 48.294 0 01-3.341 1.44 48.148 48.148 0 01-6.441 0 48.294 48.294 0 01-3.341-1.44c-.344-.203-.648-.472-.903-.787M12 18.75a.75.75 0 100-1.5.75.75 0 000 1.5z" />
-                        </svg>
-                    </div>
-                    <p class="text-center text-lg font-medium">Ассоциация музыкальных терапевтов</p>
-                </div>
-                
-                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
-                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-secondary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9 9 0 01-12.728 0M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-center text-lg font-medium">Институт психологии РАН</p>
-                </div>
-                
-                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
-                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-primary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                        </svg>
-                    </div>
-                    <p class="text-center text-lg font-medium">Клиника "ПсихоМед"</p>
-                </div>
-                
-                <div class="flex flex-col items-center testimonial-card bg-white rounded-2xl p-6 hover-glow parallax-item" data-parallax="0.05">
-                    <div class="w-16 h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-secondary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-center text-lg font-medium">Университет им. Ломоносова</p>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12 max-w-2xl mx-auto px-4">
-                <div class="relative inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary absolute -top-6 -left-6 opacity-10">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-secondary absolute -bottom-6 -right-6 opacity-10">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L21 12m0 0l-3.75 2.25M21 12H3" />
-                    </svg>
-                    <p class="text-gray-600 italic text-lg px-8 py-6 relative">
-                        "Материалы MusicMind используются в качестве дополнительных источников в программе повышения квалификации психологов"
-                    </p>
-                </div>
-                <p class="text-gray-500 mt-4 text-lg">— д.псих.н., профессор кафедры клинической психологии</p>
-            </div>
-        </section>
-
-        <!-- Блок "5-дневный челлендж" -->
-        <section class="mb-20 challenge-card rounded-3xl p-10 relative overflow-hidden parallax-scroll" data-parallax="0.07">
-            <!-- Background Image and Overlay -->
-            <div class="absolute inset-0">
-                <img src="https://picsum.photos/seed/music-relaxation/1200/800" alt="Музыка для релаксации" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-            </div>
-            
-            <div class="max-w-3xl mx-auto text-center relative z-10">
-                <span class="inline-block px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-lg font-medium rounded-full mb-6 animate-pulse-slow">
-                    Начните с этого
-                </span>
-                
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">5-дневный челлендж: улучшите психику через музыку</h2>
-                
-                <p class="text-gray-200 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
-                    Пройдите наш бесплатный курс и узнайте, как использовать музыку для снижения стресса, повышения продуктивности и улучшения сна.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row justify-center gap-5">
-                    <a href="#" class="px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold text-lg rounded-xl shadow-md floating-button relative overflow-hidden group">
-                        <span class="relative z-10">Начать челлендж</span>
-                        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave"></span>
-                    </a>
-                    <a href="#" class="px-8 py-4 border border-white/50 text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-colors">
-                        Скачать гайд (PDF)
-                    </a>
-                </div>
-                
-                <div class="mt-8 text-gray-200 text-base">
-                    Уже <span class="font-bold text-white">12,437 человек</span> улучшили свое состояние с помощью этого челленджа
-                </div>
-            </div>
-        </section>
-      <!-- Подвал сайта -->
-      <section class="mb-20 py-16 px-6 rounded-3xl relative overflow-hidden parallax-scroll" data-parallax="0.03">
-               
-      <footer class="bg-white border-t border-gray-200">
-    <div class="container mx-auto px-6 py-14">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
-            <!-- Логотип и описание -->
-            <div class="md:col-span-2">
-                <a href="#" class="flex items-center space-x-2 mb-4 group">
-                    <div class="w-10 h-10 rounded-full gradient-border p-0.5">
-                        <div class="w-full h-full rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v16M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent group-hover:animate-pulse-slow">MusicMind</span>
-                </a>
-                <p class="text-gray-700 mb-6">Научно-психологическое руководство по использованию музыки для улучшения психики — без воды, с плейлистами и объяснениями, как это работает.</p>
-                <div class="flex space-x-5">
-                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.122 3.122 0 0 1-.614-.057 3.282 3.282 0 0 0 3.067 2.277A6.588 6.588 0 0 1 0 13.734a3.282 3.282 0 0 0 2.945 2.229A6.612 6.612 0 0 1 .64 15.385 6.671 6.671 0 0 0 5.026 15z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 3.974 2.878 7.271 6.69 7.866v-5.588c-1.953.37-2.593-1.152-2.593-1.152-.351-.896-.845-1.135-.845-1.135-.683-.467.052-.458.052-.458.753.055 1.148.77 1.148.77.669 1.133 1.74 0.806 2.143.619.065-.48.26-.806.466-.984-1.64-.186-3.373-.819-3.373-3.605 0-.799.288-1.447.767-1.94.001-.001.002-.002.003-.003-.275-.673.075-1.745.794-1.745.451 0 .827.347.948.617.106.24.072.596-.028.83-.177.417-.53 1.03-.53 1.03.31-.09 1.18-.37 1.82-.37 1.55 0 2.67 1.153 2.67 2.65 0 1.5-.88 2.61-2.06 2.61-.73 0-1.36-.49-1.6-.92v-.01c0 0-.39 1.55.15 3.23 0 0 .99.3 3.23-.88 1.91.53 3.96.26 5.43-.75v-4.14z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-700 hover:text-primary hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                            <path d="M15.997 8.002a8 8 0 1 1-15.995 0 8 8 0 0 1 15.995 0ZM9.007 12.615c-2.449 0-3.74-.876-3.74-2.06v-2.13h1.298v2.053c0 .81.576 1.298 1.396 1.298.8 0 1.297-.566 1.297-1.358v-2.05h1.297v3.342c0 1.36-.79 2.27-2.06 2.27Zm-2.574-6.17a1.63 1.63 0 1 1-.001-3.26 1.63 1.63 0 0 1 0 3.26Zm4.26 6.17h-1.297V9.27c0-.11-.01-.22-.03-.32h-.01c-.19.21-.48.33-.81.33-1.02 0-1.71-.82-1.71-2.05v-2.2h1.298v2.12c0 .62.43 1.01 1.08 1.01.67 0 1.08-.4 1.08-1.03v-2.1h1.297v5.445Z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Быстрые ссылки -->
-            <div>
-                <h3 class="text-lg font-bold mb-6 text-gray-900">Быстрые ссылки</h3>
-                <ul class="space-y-3">
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Главная</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Эмоции</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Наука</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Блог</a></li>
+    <main id="hero" class="relative overflow-hidden" role="main">
+      <section class="hero">
+        <div class="container max-w-1280 px-16 md:px-24">
+          <div class="hero__content">
+            <div class="grid grid-cols-12 items-center gap-32">
+              <div class="col-span-12 lg:col-span-7">
+                <div class="hero__overline overline text-secondary-500">НАТУРАЛЬНАЯ ПОДДЕРЖКА</div>
+                <h1 class="hero__title h1 mt-12">Органический йод + микроэлементы — поддержка иммунитета для всей семьи</h1>
+                <p class="hero__lead lead mt-12 text-neutral-500">Натуральные формулы Bimmunal и Immuniti помогают восполнить дефицит йода и поддержать защитные силы организма.
+                  Не заменяют консультацию врача.</p>
+                <ul class="hero__list mt-16 space-y-8">
+                  <li class="hero__list-item flex items-center gap-8"><span class="icon-check icon--md"></span><span class="hero__list-item-text">Органический йод, высокая биодоступность</span></li>
+                  <li class="hero__list-item flex items-center gap-8"><span class="icon-shield icon--md"></span><span class="hero__list-item-text">Комплекс микроэлементов: Fe, Zn, Cu, Mn, Co, Li</span></li>
+                  <li class="hero__list-item flex items-center gap-8"><span class="icon-leaf icon--md"></span><span class="hero__list-item-text">Без лишних отдушек и агрессивных растворителей</span></li>
                 </ul>
-            </div>
-            
-            <!-- Категории -->
-            <div>
-                <h3 class="text-lg font-bold mb-6 text-gray-900">Категории</h3>
-                <ul class="space-y-3">
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Эмоциональная регуляция</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Снижение стресса</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Научные источники</a></li>
-                    <li><a href="#" class="text-gray-700 hover:text-primary hover:translate-x-1 transition-all">Партнерам</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="pt-8 mt-8 border-t border-gray-200">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-700 mb-4 md:mb-0">© 2024 MusicMind. Все права защищены. Этот сайт использует материалы в рамках добросовестного использования для образовательных целей.</p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-700 hover:text-primary hover:underline">Политика конфиденциальности</a>
-                    <a href="#" class="text-gray-700 hover:text-primary hover:underline">Условия использования</a>
+                <div class="hero__actions flex items-center gap-12 mt-16 md:flex-row flex-col md:items-center items-stretch">
+                  <a class="hero__btn hero__btn--primary btn btn--primary" href="products/bimmunal-50.html" aria-label="Купить сейчас">Купить сейчас</a>
+                  <a class="hero__btn hero__btn--outline btn btn--outline" href="#order_form" aria-label="Получить консультацию">Получить консультацию</a>
                 </div>
+                <div class="hero__info flex items-center gap-8 mt-12 text-14 text-neutral-500">
+                  <span class="icon-truck icon--md"></span>
+                  <span>Доставка по Казахстану и СНГ • Оплата при получении</span>
+                </div>
+              </div>
+              <div class="col-span-12 lg:col-span-5 mt-24 lg:mt-0">
+                <div class="hero__images">
+                  <div class="hero__product--main">
+                    <img src="assets/images/131.png" alt="Bimmunal 50ml - органический йод" class="drop-shadow-bottle hero__img" style="width: 320px; height: 320px; margin: 0 auto; border-radius: 20px; display: block; object-fit: cover;">
+                    <div class="badge">100 мкг йода в таблетке</div>
+                  </div>
+                  <div class="hero__product--secondary">
+                    <img src="assets/images/137.png" alt="Immuniti - таблетки с йодом" class="hero__img" style="width: 170px; height: 170px; border-radius: 16px; display: block; object-fit: cover;">
+                  </div>
+                </div>
+              </div>
             </div>
+            <div class="trustbar">
+              <div class="trustbar-card">
+                <div class="trustbar-item"><span class="icon-certificate icon--lg"></span><div><div class="font-600">Сертификаты качества</div><div class="text-12 text-neutral-500">ISO / GMP (если применимо)</div></div></div>
+                <div class="trustbar-item"><span class="icon-star icon--lg"></span><div><div class="font-600">Более 2 000 довольных клиентов</div><div class="text-12 text-neutral-500">Реальные отзывы</div></div></div>
+                <div class="trustbar-item"><span class="icon-shield-check icon--lg"></span><div><div class="font-600">Гарантия оригинальности</div><div class="text-12 text-neutral-500">Возврат в течение 14 дней</div></div></div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-</footer> 
-
-</section>
-
+      </section>
     </main>
 
-    <!-- Подвал сайта -->
-    
+    <!-- Benefits strip -->
+    <section id="benefits_strip" class="benefits py-20">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <div class="benefits__strip benefits-strip">
+          <div class="benefit">
+            <div class="benefit__icon-wrapper">
+              <span class="icon-leaf icon--lg"></span>
+            </div>
+            <div>
+              <div class="benefit__title benefit-title">Органический йод</div>
+              <div class="benefit__text benefit-text">Натуральная, мягкая форма для лучшей переносимости</div>
+            </div>
+          </div>
+          <div class="benefit">
+            <div class="benefit__icon-wrapper">
+              <span class="icon-dna icon--lg"></span>
+            </div>
+            <div>
+              <div class="benefit__title benefit-title">Высокая биодоступность</div>
+              <div class="benefit__text benefit-text">Оптимальная формула для усвоения организмом</div>
+            </div>
+          </div>
+          <div class="benefit">
+            <div class="benefit__icon-wrapper">
+              <span class="icon-user-friends icon--lg"></span>
+            </div>
+            <div>
+              <div class="benefit__title benefit-title">Для всей семьи</div>
+              <div class="benefit__text benefit-text">Подходит взрослым и детям по инструкции</div>
+            </div>
+          </div>
+          <div class="benefit">
+            <div class="benefit__icon-wrapper">
+              <span class="icon-certificate icon--lg"></span>
+            </div>
+            <div>
+              <div class="benefit__title benefit-title">Качество и безопасность</div>
+              <div class="benefit__text benefit-text">Контроль качества на всех этапах производства</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section id="pain_solution" class="pain-solution py-48">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <div class="pain-solution__header text-center mb-12">
+          <h2 class="h2 mb-6 mx-auto max-w-3xl">Почему это важно — боли, которые мы помогаем решить</h2>
+          <p class="body text-neutral-500 mx-auto max-w-3xl">При дефиците йода и недостатке микроэлементов люди чаще чувствуют усталость, слабость и сложнее переносят сезонные инфекции. Вот как наши продукты работают на решение этих проблем.</p>
+        </div>
+
+        <div class="pain-solution__layout">
+          <aside class="pain-solution__visual" aria-live="polite">
+            <div class="pain-solution__visual-frame">
+              <img class="pain-solution__photo is-active" src="assets/images/121.png" alt="Снижение энергии" loading="lazy" data-step="1">
+              <img class="pain-solution__photo" src="assets/images/122.png" alt="Частые простуды" loading="lazy" data-step="2">
+              <img class="pain-solution__photo" src="assets/images/123.png" alt="Поддержка щитовидной железы" loading="lazy" data-step="3">
+              <div class="pain-solution__halo" aria-hidden="true"></div>
+            </div>
+            <div class="pain-solution__note">
+              <p class="pain-solution__note-title">Выберите актуальную проблему справа, чтобы увидеть подходящее решение и продукт.</p>
+              <p class="pain-solution__note-text">Интерактивный подбор помогает быстро соотнести симптомы с правильной формой Bimmunal.</p>
+            </div>
+          </aside>
+
+          <div class="pain-solution__divider" aria-hidden="true"></div>
+
+          <div class="pain-solution__timeline" role="tablist">
+            <article class="pain-step is-active" data-step="1">
+              <button class="pain-step__button" type="button" aria-selected="true">
+                <span class="pain-step__badge">01</span>
+                <div class="pain-step__body">
+                  <h3 class="pain-step__title">Чувство постоянной усталости</h3>
+                  <p class="pain-step__text">Падает концентрация и энергия, сложно восстановиться после рабочего дня или тренировки.</p>
+                  <ul class="pain-step__list">
+                    <li>Органический йод поддерживает синтез гормонов щитовидной железы.</li>
+                    <li>Магний и селен помогают бороться с хронической усталостью.</li>
+                  </ul>
+                  <div class="pain-step__product">
+                    <span class="pain-step__product-label">Рекомендуем:</span>
+                    <span class="pain-step__product-name">BIMUNNAL — капли</span>
+                  </div>
+                </div>
+                <span class="pain-step__chevron" aria-hidden="true"></span>
+              </button>
+            </article>
+
+            <article class="pain-step" data-step="2">
+              <button class="pain-step__button" type="button" aria-selected="false">
+                <span class="pain-step__badge">02</span>
+                <div class="pain-step__body">
+                  <h3 class="pain-step__title">Частые простуды и ОРВИ</h3>
+                  <p class="pain-step__text">Организм тратит больше времени на восстановление, иммунитет не справляется с сезонными вирусами.</p>
+                  <ul class="pain-step__list">
+                    <li>Комбинация йода, цинка и селена укрепляет защитные механизмы.</li>
+                    <li>Витаминный комплекс ускоряет восстановление после болезни.</li>
+                  </ul>
+                  <div class="pain-step__product">
+                    <span class="pain-step__product-label">Рекомендуем:</span>
+                    <span class="pain-step__product-name">IMMUNITY — таблетки</span>
+                  </div>
+                </div>
+                <span class="pain-step__chevron" aria-hidden="true"></span>
+              </button>
+            </article>
+
+            <article class="pain-step" data-step="3">
+              <button class="pain-step__button" type="button" aria-selected="false">
+                <span class="pain-step__badge">03</span>
+                <div class="pain-step__body">
+                  <h3 class="pain-step__title">Риски для щитовидной железы</h3>
+                  <p class="pain-step__text">Скачки гормонального фона, дискомфорт в области шеи или результаты анализов сигнализируют о дефиците йода.</p>
+                  <ul class="pain-step__list">
+                    <li>Профилактический комплекс восполняет суточную норму йода.</li>
+                    <li>Местные средства облегчают локальные симптомы и защищают кожу.</li>
+                  </ul>
+                  <div class="pain-step__product">
+                    <span class="pain-step__product-label">Рекомендуем:</span>
+                    <span class="pain-step__product-name">BIMUNNAL M — мазь</span>
+                  </div>
+                </div>
+                <span class="pain-step__chevron" aria-hidden="true"></span>
+              </button>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products grid -->
+    <section id="products" class="products py-48 bg-white">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <h2 class="products__title h2">Наша продукция</h2>
+        <p class="products__subtitle small text-neutral-500 mt-8">Выберите форму и упаковку, подходящую вам</p>
+        <div class="products__grid products-grid mt-16">
+          <article class="product-card product-card--bimmunal product-card--overlay" role="link" aria-label="Купить BIMUNNAL — 50 мл (питьевая форма)">
+            <div class="product-card__image-wrapper">
+              <img src="assets/images/product/1.png" alt="Bimmunal 50ml" class="product-card__image product-image">
+              <div class="product-card__overlay" aria-hidden="true">
+                <div class="product-card__ribbon">Популярно</div>
+                <div class="product-card__overlay-bottom">
+                  <div class="product-card__overlay-title">BIMUNNAL — 50 мл</div>
+                  <div class="product-card__overlay-subtitle">Питьевая форма</div>
+                </div>
+                <div class="product-card__price-badge">от 3 200 ₸</div>
+              </div>
+            </div>
+            <div class="product-card__body product-body">
+              <div class="product-card__pill pill pill--popular">Популярно</div>
+              <h3 class="product-card__title h4">BIMUNNAL — 50 мл (питьевая форма)</h3>
+              <p class="product-card__short product-short">Жидкая форма органического йода с комплексом микроэлементов.</p>
+              <div class="product-card__benefits">
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/leaf.svg" alt="">
+                  <span>Натуральный состав</span>
+                </div>
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/dna.svg" alt="">
+                  <span>Комплекс микроэлементов</span>
+                </div>
+              </div>
+              <div class="product-card__price product-price">от 3 200 ₸</div>
+              <div class="product-card__cta product-cta">
+                <a class="btn btn--primary" href="products/bimmunal-50.html">Купить</a>
+                <a class="btn btn--outline" href="products/bimmunal-50.html#product-details">Подробнее</a>
+              </div>
+            </div>
+          </article>
+          <article class="product-card product-card--immunity product-card--overlay" role="link" aria-label="Купить IMMUNITY — 100 таблеток (100 мкг)">
+            <div class="product-card__image-wrapper">
+              <img src="assets/images/product/2.png" alt="Immuniti 100" class="product-card__image product-image">
+              <div class="product-card__overlay" aria-hidden="true">
+                <div class="product-card__ribbon">Суточная доза 100 мкг</div>
+                <div class="product-card__overlay-bottom">
+                  <div class="product-card__overlay-title">IMMUNITY — 100 табл.</div>
+                  <div class="product-card__overlay-subtitle">Ежедневный приём</div>
+                </div>
+                <div class="product-card__price-badge">от 2 800 ₸</div>
+              </div>
+            </div>
+            <div class="product-card__body product-body">
+              <div class="product-card__pill pill">Суточная доза 100 мкг</div>
+              <h3 class="product-card__title h4">IMMUNITY — 100 таблеток (100 мкг)</h3>
+              <p class="product-card__short product-short">Таблетированная форма для ежедневного использования.</p>
+              <div class="product-card__benefits">
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/shield-check.svg" alt="">
+                  <span>Поддержка иммунитета</span>
+                </div>
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/user-friends.svg" alt="">
+                  <span>Для всей семьи</span>
+                </div>
+              </div>
+              <div class="product-card__price product-price">от 2 800 ₸</div>
+              <div class="product-card__cta product-cta">
+                <a class="btn btn--primary" href="/products/immuniti-100">Купить</a>
+                <a class="btn btn--outline" href="/products/immuniti-100#description">Подробнее</a>
+              </div>
+            </div>
+          </article>
+          <article class="product-card product-card--ointment product-card--overlay" role="link" aria-label="Купить BIMUNNAL M — мазь 70 мл">
+            <div class="product-card__image-wrapper">
+              <img src="assets/images/product/3.png" alt="Мазь 70ml" class="product-card__image product-image">
+              <div class="product-card__overlay" aria-hidden="true">
+                <div class="product-card__ribbon">Местное применение</div>
+                <div class="product-card__overlay-bottom">
+                  <div class="product-card__overlay-title">BIMUNNAL M — мазь</div>
+                  <div class="product-card__overlay-subtitle">Уход за кожей</div>
+                </div>
+                <div class="product-card__price-badge">от 1 900 ₸</div>
+              </div>
+            </div>
+            <div class="product-card__body product-body">
+              <div class="product-card__pill pill">Местное применение</div>
+              <h3 class="product-card__title h4">BIMUNNAL M — мазь 70 мл</h3>
+              <p class="product-card__short product-short">Местное применение: заживление, уход за кожей.</p>
+              <div class="product-card__benefits">
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/heart-pulse.svg" alt="">
+                  <span>Заживление и уход</span>
+                </div>
+                <div class="product-card__benefit-item">
+                  <img src="assets/images/icons-new/thermometer.svg" alt="">
+                  <span>Противовоспалительный</span>
+                </div>
+              </div>
+              <div class="product-card__price product-price">от 1 900 ₸</div>
+              <div class="product-card__cta product-cta">
+                <a class="btn btn--primary" href="/products/bimmunal-ointment">Купить</a>
+                <a class="btn btn--outline" href="/products/bimmunal-ointment#description">Подробнее</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works (Roadmap Version) -->
+    <section id="how_it_works" class="roadmap-section py-48">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <h3 class="roadmap-section__title h3 text-center">Ваш путь к здоровью в 3 шага</h3>
+        <p class="roadmap-section__subtitle body text-neutral-500 text-center mt-8">Простой план, который помогает выбрать форму, начать курс и отслеживать результат.</p>
+        <div class="roadmap-container mt-24">
+          
+          <!-- Step 1 -->
+          <div class="roadmap-step">
+            <div class="roadmap-step__point">
+              <img src="assets/images/icons-new/dna.svg" alt="Иконка ДНК">
+            </div>
+            <div class="roadmap-step__content">
+              <div class="title">1. Оценка потребностей</div>
+              <div class="text">Короткий онлайн-тест или консультация специалиста помогут выбрать оптимальную форму и дозу.</div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="roadmap-step">
+            <div class="roadmap-step__point">
+              <img src="assets/images/icons-new/leaf.svg" alt="Иконка листа">
+            </div>
+            <div class="roadmap-step__content">
+              <div class="title">2. Подобранный курс</div>
+              <div class="text">Удобная форма — капли, таблетки или мазь — с подробной инструкцией по применению.</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="roadmap-step">
+            <div class="roadmap-step__point">
+              <img src="assets/images/icons-new/heart-pulse.svg" alt="Иконка пульса">
+            </div>
+            <div class="roadmap-step__content">
+              <div class="title">3. Контроль и результат</div>
+              <div class="text">Регулярный прием по инструкции и контроль состояния — лучшие условия для стабильного эффекта.</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="text-center">
+            <a class="btn btn--primary mt-24" href="/quiz">Начать свой путь</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust bar -->
+    <section id="trust_bar" class="trust-bar py-20 bg-white">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <div class="trust-bar__inline trust-inline">
+          <div class="trust-item ti"><span class="icon-truck icon--lg"></span><div><div class="trust-item__title t">Доставка</div><div class="trust-item__subtitle s">По всей стране</div></div></div>
+          <div class="trust-item ti"><span class="icon-credit-card icon--lg icon--secondary"></span><div><div class="trust-item__title t">Оплата</div><div class="trust-item__subtitle s">Любым удобным способом</div></div></div>
+          <div class="trust-item ti"><span class="icon-shield icon--lg icon--success"></span><div><div class="trust-item__title t">Гарантия</div><div class="trust-item__subtitle s">Возврат и обмен 14 дней</div></div></div>
+          <div class="trust-item ti"><span class="icon-phone icon--lg icon--neutral"></span><div><div class="trust-item__title t">Поддержка</div><div class="trust-item__subtitle s">Онлайн-консультация + телефон</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials-section py-48 bg-white">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <h2 class="testimonials-section__title h2">Отзывы клиентов</h2>
+        <div class="reviews-carousel mt-16">
+          <button class="reviews-nav reviews-prev" aria-label="Предыдущий отзыв">‹</button>
+          <div class="reviews-viewport" aria-live="polite">
+            <div class="testimonials-section__list testimonials reviews-track">
+          <article class="testimonial review-card">
+            <div class="testimonial__avatar avatar avatar--sunrise">А</div>
+            <div class="testimonial__name name">Алина, Алматы</div>
+            <p class="testimonial__text text">Принимала Immuniti всю осень — заметила, что реже болею и стала меньше уставать. Удобная упаковка, приятный вкус.</p>
+            <div class="testimonial__rating rating" aria-label="Рейтинг 5 из 5">★★★★★</div>
+          </article>
+          <article class="testimonial review-card">
+            <div class="testimonial__avatar avatar avatar--sunrise-reverse">Е</div>
+            <div class="testimonial__name name">Егор, Нур-Султан</div>
+            <p class="testimonial__text text">Bimmunal в жидкой форме дал быстрый эффект: улучшилось самочувствие, врач одобрил использование по назначению.</p>
+            <div class="testimonial__rating rating" aria-label="Рейтинг 5 из 5">★★★★★</div>
+          </article>
+          <article class="testimonial review-card">
+            <div class="testimonial__avatar avatar avatar--violet">М</div>
+            <div class="testimonial__name name">Мария, Шымкент</div>
+            <p class="testimonial__text text">Мазь помогла при небольшом повреждении кожи — заживление шло быстрее. Рекомендую параллельно с основным курсом.</p>
+            <div class="testimonial__rating rating" aria-label="Рейтинг 4 из 5">★★★★☆</div>
+          </article>
+              <article class="testimonial review-card">
+                <div class="testimonial__avatar avatar avatar--coral">С</div>
+                <div class="testimonial__name name">Светлана, Караганда</div>
+                <p class="testimonial__text text">Immuniti удобно принимать — не забываю, есть напоминание в телефоне. Чувствую больше энергии.</p>
+                <div class="testimonial__rating rating" aria-label="Рейтинг 5 из 5">★★★★★</div>
+              </article>
+              <article class="testimonial review-card">
+                <div class="testimonial__avatar avatar avatar--azure">Д</div>
+                <div class="testimonial__name name">Данияр, Астана</div>
+                <p class="testimonial__text text">Доставка пришла быстро. Консультация помогла выбрать дозировку — доволен сервисом.</p>
+                <div class="testimonial__rating rating" aria-label="Рейтинг 5 из 5">★★★★★</div>
+              </article>
+              <article class="testimonial review-card">
+                <div class="testimonial__avatar avatar avatar--lilac">Н</div>
+                <div class="testimonial__name name">Наталья, Костанай</div>
+                <p class="testimonial__text text">После курса Bimmunal меньше простуд. Вкус нейтральный, удобно дозировать.</p>
+                <div class="testimonial__rating rating" aria-label="Рейтинг 4 из 5">★★★★☆</div>
+              </article>
+            </div>
+          </div>
+          <button class="reviews-nav reviews-next" aria-label="Следующий отзыв">›</button>
+        </div>
+        <div class="reviews-dots" role="tablist" aria-label="Навигация по отзывам"></div>
+      </div>
+    </section>
+
+    <!-- Articles preview -->
+    <section id="articles" class="articles-section py-48 bg-neutral-50">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <h3 class="articles-section__title h3">Полезные статьи и исследования</h3>
+        <div class="articles-section__list articles-grid mt-16">
+          <article class="articles-card">
+            <a class="articles-card__link" href="/blog/5-priznakov-deficita-joda">
+              <figure class="articles-card__media">
+                <img src="assets/images/121.png" alt="5 признаков дефицита йода: как распознать и что делать" loading="lazy">
+              </figure>
+              <div class="articles-card__content">
+                <span class="articles-card__tag">Руководство</span>
+                <h4 class="articles-card__title">5 признаков дефицита йода: как распознать и что делать</h4>
+                <div class="articles-card__meta">
+                  <time class="articles-card__date" datetime="2025-08-12">12.08.2025</time>
+                  <span class="articles-card__dot" aria-hidden="true"></span>
+                  <span class="articles-card__reading">7 мин чтения</span>
+                </div>
+              </div>
+            </a>
+          </article>
+          <article class="articles-card">
+            <a class="articles-card__link" href="/blog/organic-iodine">
+              <figure class="articles-card__media">
+                <img src="assets/images/122.png" alt="Органический йод: преимущества и особенности" loading="lazy">
+              </figure>
+              <div class="articles-card__content">
+                <span class="articles-card__tag">Наука</span>
+                <h4 class="articles-card__title">Органический йод: преимущества и особенности</h4>
+                <div class="articles-card__meta">
+                  <time class="articles-card__date" datetime="2025-08-03">03.08.2025</time>
+                  <span class="articles-card__dot" aria-hidden="true"></span>
+                  <span class="articles-card__reading">6 мин чтения</span>
+                </div>
+              </div>
+            </a>
+          </article>
+          <article class="articles-card">
+            <a class="articles-card__link" href="/blog/form-choice">
+              <figure class="articles-card__media">
+                <img src="assets/images/123.png" alt="Как выбрать форму йода: таблетки, капли или мазь?" loading="lazy">
+              </figure>
+              <div class="articles-card__content">
+                <span class="articles-card__tag">Практика</span>
+                <h4 class="articles-card__title">Как выбрать форму йода: таблетки, капли или мазь?</h4>
+                <div class="articles-card__meta">
+                  <time class="articles-card__date" datetime="2025-07-28">28.07.2025</time>
+                  <span class="articles-card__dot" aria-hidden="true"></span>
+                  <span class="articles-card__reading">5 мин чтения</span>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order form -->
+    <section id="order_form" class="order-form py-40 bg-neutral-50">
+      <div class="container max-w-1280 px-16 md:px-24">
+        <div class="order-form__card pro-form-card">
+          <div class="order-form__header pro-form-header">
+            <h3 class="order-form__title h3">Оформить быстрый заказ</h3>
+            <p class="order-form__subtitle text-neutral-500 mt-4">Оставьте контакт — менеджер свяжется и подтвердит заказ.</p>
+          </div>
+          <form class="order-form__grid pro-form-grid" novalidate>
+            <fieldset class="order-form__fieldset col-span-12 fieldset-group">
+              <legend class="order-form__legend fieldset-legend">Контактные данные</legend>
+              <div class="order-form__grid pro-form-grid">
+                <div class="order-form__field form-field-group col-span-6">
+                  <label for="pro-name" class="order-form__label form-label-pro">Имя</label>
+                  <div class="order-form__input-wrapper input-wrapper">
+                    <span class="input-icon icon-user-friends icon--sm"></span>
+                    <input id="pro-name" class="order-form__input form-input-pro with-icon" type="text" name="name" placeholder="Введите ваше имя" required>
+                  </div>
+                </div>
+                <div class="order-form__field form-field-group col-span-6">
+                  <label for="pro-phone" class="order-form__label form-label-pro">Телефон</label>
+                  <div class="order-form__input-wrapper input-wrapper">
+                    <span class="input-icon icon-phone icon--sm"></span>
+                    <input id="pro-phone" class="order-form__input form-input-pro with-icon" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="order-form__fieldset col-span-12 fieldset-group">
+              <legend class="order-form__legend fieldset-legend">Детали заказа</legend>
+              <div class="order-form__grid pro-form-grid">
+                <div class="order-form__field form-field-group col-span-6">
+                  <label for="pro-product" class="order-form__label form-label-pro">Продукт</label>
+                  <div class="order-form__input-wrapper input-wrapper">
+                    <span class="input-icon icon-cart icon--sm"></span>
+                    <select id="pro-product" class="order-form__input form-input-pro with-icon" name="product" required>
+                      <option value="" disabled selected>Выберите из списка</option>
+                      <option>Bimmunal 50 мл</option>
+                      <option>Immuniti 100</option>
+                      <option>Bimmunal мазь 70 мл</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="order-form__field form-field-group col-span-6">
+                  <label for="pro-quantity" class="order-form__label form-label-pro">Количество</label>
+                  <div class="order-form__input-wrapper input-wrapper">
+                    <span class="input-icon icon-check icon--sm"></span>
+                    <input id="pro-quantity" class="order-form__input form-input-pro with-icon" type="number" name="quantity" min="1" value="1" required>
+                  </div>
+                </div>
+                <div class="order-form__field form-field-group col-span-12">
+                  <label for="pro-comment" class="order-form__label form-label-pro">Комментарий (необязательно)</label>
+                  <div class="order-form__input-wrapper input-wrapper">
+                     <textarea id="pro-comment" class="order-form__input form-input-pro" name="comment" rows="4" placeholder="Ваши пожелания к заказу..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="order-form__actions col-span-12">
+              <button class="btn btn--secondary btn--lg w-full" type="submit">Отправить заказ</button>
+            </div>
+            <div class="order-form__footer col-span-12 text-center text-12 text-neutral-500">
+              Нажимая кнопку, вы соглашаетесь на обработку персональных данных. <a class="link" href="/privacy-policy">Политика конфиденциальности</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="site-footer footer" role="contentinfo" aria-label="Низ страницы">
+      <div class="container max-w-1280 px-16 md:px-24 py-32">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="footer-logo logo-steko" href="#hero" aria-label="Steko LTD - на главную">
+              <span class="logo-main">Steko</span><span class="logo-ltd">LTD</span>
+            </a>
+            <p class="footer-tagline">Комплексные решения на основе микроэлементов и нутрицевтиков для устойчивого иммунитета.</p>
+            <ul class="footer-badges">
+              <li>ISO 22000</li>
+              <li>GMP</li>
+              <li>Made in KZ</li>
+            </ul>
+            <div class="footer-brand__cta">
+              <p class="footer-brand__cta-text">Нужна консультация по линейке Bimmunal и Immuniti? Напишите нам, и эксперт подберёт решение под ваши задачи.</p>
+              <a class="footer-brand__cta-link" href="#order_form">Связаться с экспертом</a>
+            </div>
+          </div>
+          <div class="footer-nav">
+            <div class="footer-column">
+              <h3 class="footer-heading">Продукция</h3>
+              <ul class="footer-links">
+                <li><a href="products/bimmunal-50.html">Bimmunal 50 мл</a></li>
+                <li><a href="/products/immuniti-100">Immuniti 100</a></li>
+                <li><a href="/products/bimmunal-ointment">Bimmunal M - мазь</a></li>
+                <li><a href="/products/accessories">Аксессуары и наборы</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h3 class="footer-heading">Компания</h3>
+              <ul class="footer-links">
+                <li><a href="/about">О производстве</a></li>
+                <li><a href="/certificates">Сертификаты</a></li>
+                <li><a href="/blog">Блог и исследования</a></li>
+                <li><a href="/careers">Карьера</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-column footer-column--contact">
+            <h3 class="footer-heading">Контакты</h3>
+            <ul class="footer-contact">
+              <li><a class="footer-contact__link" href="tel:+77271234567"><span class="icon-phone icon--sm" aria-hidden="true"></span><span>+7 (727) 123-45-67</span></a></li>
+              <li><a class="footer-contact__link" href="mailto:info@stekoltd.com"><span class="icon-mail icon--sm" aria-hidden="true"></span><span>info@stekoltd.com</span></a></li>
+              <li><span class="footer-contact__item" aria-label="Адрес офиса"><span class="icon-map-pin icon--sm" aria-hidden="true"></span><span>Алматы, ул. Ташкентская 10</span></span></li>
+              <li class="footer-contact__item footer-contact__item--hours"><span class="footer-contact__label">Режим работы</span><span>Пн–Пт 09:00–18:00, Сб 10:00–15:00</span></li>
+            </ul>
+            <div class="footer-socials" aria-label="Социальные сети">
+              <a class="footer-socials__link" href="https://instagram.com/brand" aria-label="Instagram">
+                <svg class="footer-socials__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"></rect>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </a>
+              <a class="footer-socials__link" href="https://t.me/brand" aria-label="Telegram">
+                <svg class="footer-socials__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3.5 11.8l16.2-6.6c.7-.3 1.4.4 1.2 1.1l-2.7 11.4c-.2.7-1 .9-1.5.5l-4.3-3.1-2.1 2.8-.2-4-4.3-1.4c-.8-.3-.8-1.4 0-1.7z"></path>
+                  <path d="M9.3 13.1l7.7-6.1"></path>
+                </svg>
+              </a>
+              <a class="footer-socials__link" href="https://www.youtube.com/brand" aria-label="YouTube">
+                <svg class="footer-socials__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="6.2" width="18" height="11.6" rx="3.2"></rect>
+                  <path d="M11 9.5l4.5 2.5L11 14.5z" fill="currentColor" stroke="none"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="footer-column footer-column--newsletter">
+            <div class="footer-newsletter">
+              <h3 class="footer-heading">Будьте на связи</h3>
+              <p class="footer-newsletter__text">Подпишитесь на новости — рассказываем про исследования, клинические кейсы и акции для партнёров.</p>
+              <form class="footer-newsletter__form" action="#" method="post">
+                <label class="sr-only" for="footer-email">Ваш e-mail</label>
+                <input id="footer-email" type="email" name="email" class="footer-newsletter__input" placeholder="E-mail" required>
+                <button type="submit" class="footer-newsletter__button btn btn--secondary btn--sm">Подписаться</button>
+              </form>
+              <p class="footer-newsletter__legal">Нажимая кнопку, вы соглашаетесь с <a class="link" href="/privacy-policy">политикой конфиденциальности</a>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-support" role="region" aria-label="Быстрая связь">
+          <p class="footer-support__text">Не нашли нужный продукт или формат? Оставьте заявку — команда Steko подготовит коммерческое предложение и расскажет о наличии у партнёров.</p>
+          <div class="footer-support__actions">
+            <a class="btn btn--primary" href="#order_form">Получить консультацию</a>
+            <a class="btn btn--outline footer-support__phone" href="tel:+77271234567"><span class="icon-phone icon--sm" aria-hidden="true"></span>Позвонить</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="footer-bottom__links">
+            <a href="/privacy-policy">Политика конфиденциальности</a>
+            <a href="/terms">Пользовательское соглашение</a>
+            <a href="/cookie-policy">Cookies</a>
+          </div>
+          <div class="footer-bottom__meta">
+            <span>© 2025 Steko LTD</span>
+            <span>Все права защищены</span>
+            <span>БИН 123456789012</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Lead magnet modal -->
+    <div id="lead_magnet_modal" class="lead-magnet-modal modal" aria-hidden="true" aria-label="Модальное окно — получить чеклист" role="dialog">
+      <div class="lead-magnet-modal__overlay modal-overlay" data-close></div>
+      <div class="lead-magnet-modal__card modal-card" role="document">
+        <button class="lead-magnet-modal__close btn-icon modal-close" aria-label="Закрыть" data-close>
+          <span class="icon-close icon--md" aria-hidden="true"></span>
+        </button>
+        <h3 class="lead-magnet-modal__title h3">Получите чек-лист бесплатно</h3>
+        <p class="lead-magnet-modal__subtitle body text-neutral-500 mt-8">«10 признаков дефицита йода» — PDF на e-mail</p>
+        <form class="lead-magnet-modal__form mt-16 grid gap-12" novalidate>
+          <label class="lead-magnet-modal__field field">
+            <input type="email" name="email" placeholder="Введите e-mail" required class="lead-magnet-modal__input input" aria-describedby="email-error" />
+            <span id="email-error" class="lead-magnet-modal__error error" aria-live="polite"></span>
+          </label>
+          <label class="lead-magnet-modal__field field">
+            <input type="tel" name="phone" placeholder="Номер телефона (опционально)" class="lead-magnet-modal__input input" />
+          </label>
+          <button type="submit" class="lead-magnet-modal__button btn btn--primary btn--lg">Получить чек-лист</button>
+          <div class="lead-magnet-modal__info text-12 text-neutral-500">Мы не передаем ваши данные третьим лицам.</div>
+        </form>
+      </div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Accessibility & Mobile Menu ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuButton.addEventListener('click', function() {
-                const isHidden = mobileMenu.classList.toggle('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', !isHidden);
-            });
+      // Minimal JS: offcanvas toggle, navbar shadow, dropdowns, modal helpers
+      (function(){
+        const header = document.getElementById('navbar');
+        const offcanvas = document.getElementById('offcanvas-menu');
+        const modal = document.getElementById('lead_magnet_modal');
 
-            // --- Optimized Parallax Effect on Mouse Move ---
-            const parallaxItems = document.querySelectorAll('[data-parallax]');
-            // Only run on devices with fine pointers (mice) to save resources on touch devices
-            if (window.matchMedia('(pointer: fine)').matches) {
-                let mouseX = 0;
-                let mouseY = 0;
-                let isTicking = false;
-
-                const updateMousePosition = (e) => {
-                    mouseX = e.clientX;
-                    mouseY = e.clientY;
-
-                    if (!isTicking) {
-                        window.requestAnimationFrame(() => {
-                            parallaxItems.forEach(item => {
-                                const speed = parseFloat(item.getAttribute('data-parallax'));
-                                const x = (window.innerWidth - mouseX * speed) / 100;
-                                const y = (window.innerHeight - mouseY * speed) / 100;
-                                // Using translate3d hints the browser to use GPU acceleration
-                                item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                            });
-                            isTicking = false;
-                        });
-                        isTicking = true;
-                    }
-                };
-                document.addEventListener('mousemove', updateMousePosition);
-            }
-
-            // --- Animation on Scroll ---
-            const revealOnScroll = () => {
-                const reveals = document.querySelectorAll('.reveal, .parallax');
-                const windowHeight = window.innerHeight;
-                const elementVisible = 150;
-
-                for (let i = 0; i < reveals.length; i++) {
-                    const elementTop = reveals[i].getBoundingClientRect().top;
-                    if (elementTop < windowHeight - elementVisible) {
-                        reveals[i].classList.add('active');
-                    }
-                }
-            };
-            
-            window.addEventListener('scroll', revealOnScroll);
-            window.addEventListener('load', revealOnScroll);
-            setTimeout(revealOnScroll, 100); // Initial check
-
-            // --- Goal Filtering Logic ---
-            const goalButtons = document.querySelectorAll('.goal-btn');
-            goalButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    goalButtons.forEach(btn => {
-                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-primary/10', 'to-primary/5', 'text-primary');
-                        btn.classList.add('bg-gray-50', 'text-gray-700');
-                    });
-                    
-                    this.classList.remove('bg-gray-50', 'text-gray-700');
-                    this.classList.add('active', 'bg-gradient-to-r', 'from-primary/10', 'to-primary/5', 'text-primary');
-                    
-                    const goal = this.getAttribute('data-goal');
-                    document.querySelectorAll('.goal-content').forEach(content => {
-                        const contentGoals = content.getAttribute('data-goals');
-                        if (contentGoals.includes(goal) || contentGoals === 'all') {
-                            content.classList.add('active');
-                        } else {
-                            content.classList.remove('active');
-                        }
-                    });
-                });
-            });
-            
-            const initialGoalButton = document.querySelector('.goal-btn[data-goal="stress"]');
-            if (initialGoalButton) {
-                initialGoalButton.click();
-            }
-
-            // --- Parallax on Scroll ---
-            const parallaxScrollElements = document.querySelectorAll('.parallax-scroll');
-            const parallaxBackground = document.querySelector('.parallax-background');
-
-            const handleScrollParallax = () => {
-                const scrollPosition = window.pageYOffset;
-                
-                parallaxScrollElements.forEach(element => {
-                    const speed = 0.5;
-                    const yPos = -(scrollPosition * speed / 10);
-                    element.style.backgroundPosition = `center ${yPos}px`;
-                });
-
-                if (parallaxBackground) {
-                    const yPosBg = -(scrollPosition * 0.1);
-                    parallaxBackground.style.backgroundPosition = `center ${yPosBg}px`;
-                }
-            };
-            window.addEventListener('scroll', handleScrollParallax);
-
-            // --- Smooth Scrolling for Anchor Links ---
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    const href = this.getAttribute('href');
-                    if (href.length > 1) {
-                        try {
-                            const targetElement = document.querySelector(href);
-                            if (targetElement) {
-                                e.preventDefault();
-                                targetElement.scrollIntoView({
-                                    behavior: 'smooth'
-                                });
-                            }
-                        } catch (error) {
-                            console.error('Invalid selector for smooth scroll:', href);
-                        }
-                    }
-                });
-            });
+        // Shadow on scroll
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 8) header.classList.add('navbar--scrolled'); else header.classList.remove('navbar--scrolled');
         });
+
+        // Offcanvas open/close
+        document.querySelectorAll('[data-target="#offcanvas-menu"]').forEach(btn => btn.addEventListener('click', () => {
+          offcanvas.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('no-scroll');
+        }));
+        
+        offcanvas?.addEventListener('click', (e) => {
+          if (e.target.matches('[data-close]') || e.target === e.currentTarget.querySelector('.offcanvas-backdrop')) {
+            offcanvas.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('no-scroll');
+          }
+        });
+
+        // Also handle close button inside the panel
+        const closeButtons = offcanvas?.querySelectorAll('[data-close]');
+        if (closeButtons) {
+          closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              offcanvas.setAttribute('aria-hidden', 'true');
+              document.body.classList.remove('no-scroll');
+            });
+          });
+        }
+
+        // Mobile menu dropdown functionality
+        const dropdownButtons = offcanvas?.querySelectorAll('.nav-mobile--has-dropdown');
+        if (dropdownButtons) {
+          dropdownButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              const dropdownContent = button.nextElementSibling;
+              
+              // Toggle current dropdown
+              button.setAttribute('aria-expanded', !isExpanded);
+              dropdownContent.setAttribute('aria-hidden', isExpanded);
+            });
+          });
+        }
+
+        // Desktop menu dropdown functionality for accessibility
+        const desktopDropdownButtons = document.querySelectorAll('.navbar__nav-link--has-dropdown');
+        if (desktopDropdownButtons) {
+          desktopDropdownButtons.forEach(button => {
+            // Handle click for accessibility
+            button.addEventListener('click', (e) => {
+              e.preventDefault();
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              const dropdown = button.nextElementSibling;
+              
+              // Close all other dropdowns
+              document.querySelectorAll('.navbar__nav-link--has-dropdown').forEach(otherButton => {
+                if (otherButton !== button) {
+                  otherButton.setAttribute('aria-expanded', 'false');
+                  otherButton.nextElementSibling.setAttribute('aria-hidden', 'true');
+                }
+              });
+              
+              // Toggle current dropdown
+              button.setAttribute('aria-expanded', !isExpanded);
+              dropdown.setAttribute('aria-hidden', isExpanded);
+            });
+            
+            // Handle focus events for keyboard navigation
+            button.addEventListener('focus', () => {
+              const dropdown = button.nextElementSibling;
+              button.setAttribute('aria-expanded', 'true');
+              dropdown.setAttribute('aria-hidden', 'false');
+            });
+            
+            // Handle blur events
+            button.addEventListener('blur', () => {
+              setTimeout(() => {
+                const dropdown = button.nextElementSibling;
+                if (!dropdown.contains(document.activeElement)) {
+                  button.setAttribute('aria-expanded', 'false');
+                  dropdown.setAttribute('aria-hidden', 'true');
+                }
+              }, 100);
+            });
+          });
+          
+          // Handle dropdown links blur
+          document.querySelectorAll('.navbar__nav-dropdown').forEach(dropdown => {
+            dropdown.addEventListener('blur', () => {
+              setTimeout(() => {
+                if (!dropdown.contains(document.activeElement)) {
+                  const button = dropdown.previousElementSibling;
+                  button.setAttribute('aria-expanded', 'false');
+                  dropdown.setAttribute('aria-hidden', 'true');
+                }
+              }, 100);
+            });
+          });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.navbar__nav-item--dropdown')) {
+            document.querySelectorAll('.navbar__nav-link--has-dropdown').forEach(button => {
+              button.setAttribute('aria-expanded', 'false');
+              button.nextElementSibling.setAttribute('aria-hidden', 'true');
+            });
+          }
+        });
+
+        // Lead magnet triggers - disabled as requested
+        /*
+        let shown = false;
+        function openModal(){ if (shown) return; shown = true; modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
+        function closeModal(){ modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
+        setTimeout(openModal, 10000);
+        document.addEventListener('mouseout', (e) => { if (e.clientY <= 0) openModal(); });
+        modal?.addEventListener('click', (e) => { if (e.target.matches('[data-close]') || e.target === modal.querySelector('.modal-overlay')) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') closeModal(); });
+        */
+
+        // Basic form validation
+        modal?.querySelector('form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = e.currentTarget.querySelector('input[name="email"]');
+          const err = e.currentTarget.querySelector('#email-error');
+          const valid = /.+@.+\..+/.test(email.value);
+          if (!valid) { err.textContent = 'Укажите корректный e-mail'; email.classList.add('input-error'); return; }
+          err.textContent = '';
+          alert('Спасибо! Ссылка для скачивания отправлена на почту.');
+          e.currentTarget.reset();
+          closeModal();
+        });
+
+        // Order form basic validation
+        document.querySelector('#order_form form')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const required = ['name','phone','product','quantity','city'];
+          let ok = true;
+          required.forEach(n=>{
+            const input = form.querySelector(`[name="${n}"]`);
+            const err = form.querySelector(`#err-${n==='quantity'?'qty':n}`);
+            if(!input.value){ err.textContent='Это поле обязательно для заполнения'; ok=false; }
+            else if(n==='phone' && !/\d{6,}/.test(input.value)){ err.textContent='Укажите корректный номер телефона'; ok=false; }
+            else { err.textContent=''; }
+          });
+          if(!ok) return;
+          alert('Спасибо — заявка принята. Менеджер свяжется с вами в течение рабочего дня для подтверждения.');
+          form.reset();
+        });
+
+        // Reviews carousel controls
+        const reviewsViewport = document.querySelector('.reviews-viewport');
+        const reviewsTrack = document.querySelector('.reviews-track');
+        const prevBtn = document.querySelector('.reviews-prev');
+        const nextBtn = document.querySelector('.reviews-next');
+        const dotsWrap = document.querySelector('.reviews-dots');
+        function getCardWidth(){
+          const first = reviewsTrack?.querySelector('.review-card');
+          if(!first) return 0;
+          const style = window.getComputedStyle(reviewsTrack);
+          const gap = parseFloat(style.columnGap || style.gap || '0');
+          return first.getBoundingClientRect().width + gap;
+        }
+        function scrollByCards(dir){
+          const delta = getCardWidth();
+          if(!delta || !reviewsViewport) return;
+          reviewsViewport.scrollBy({ left: dir * delta, behavior: 'smooth' });
+        }
+        prevBtn?.addEventListener('click', ()=> scrollByCards(-1));
+        nextBtn?.addEventListener('click', ()=> scrollByCards(1));
+
+        // Dots pagination
+        function initDots(){
+          if(!reviewsTrack || !dotsWrap) return;
+          const items = reviewsTrack.querySelectorAll('.review-card');
+          dotsWrap.innerHTML = '';
+          items.forEach((_, i)=>{
+            const d = document.createElement('button');
+            d.className = 'reviews-dot';
+            d.type = 'button';
+            d.setAttribute('role','tab');
+            d.setAttribute('aria-label', `Перейти к слайду ${i+1}`);
+            d.addEventListener('click', ()=>{
+              const w = getCardWidth();
+              reviewsViewport.scrollTo({ left: i * w, behavior: 'smooth' });
+            });
+            dotsWrap.appendChild(d);
+          });
+          updateDots();
+        }
+        function updateDots(){
+          if(!reviewsViewport || !dotsWrap) return;
+          const w = getCardWidth();
+          const idx = Math.round((reviewsViewport.scrollLeft || 0) / (w || 1));
+          Array.from(dotsWrap.children).forEach((el, i)=>{
+            el.classList.toggle('is-active', i === idx);
+          });
+        }
+        reviewsViewport?.addEventListener('scroll', ()=>{
+          window.requestAnimationFrame(updateDots);
+        });
+        window.addEventListener('resize', ()=>{
+          updateDots();
+        });
+        initDots();
+      })();
     </script>
-</body>
+        <script>
+      // Timeline focus for \"Почему это важно\"
+      function initPainSolutionTimeline() {
+        const timeline = document.querySelector('.pain-solution__timeline');
+        const photos = Array.from(document.querySelectorAll('.pain-solution__photo'));
+        if (!timeline || !photos.length) return;
+
+        const steps = Array.from(timeline.querySelectorAll('.pain-step'));
+        if (!steps.length) return;
+
+        const setActiveStep = (targetStep) => {
+          const stepId = targetStep.dataset.step;
+
+          steps.forEach(step => {
+            const isActive = step === targetStep;
+            step.classList.toggle('is-active', isActive);
+            const button = step.querySelector('.pain-step__button');
+            if (button) button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+
+          photos.forEach(photo => {
+            photo.classList.toggle('is-active', photo.dataset.step === stepId);
+          });
+        };
+
+        steps.forEach(step => {
+          const button = step.querySelector('.pain-step__button');
+          if (!button) return;
+
+          ['click', 'mouseenter', 'focus'].forEach(evt => {
+            button.addEventListener(evt, () => setActiveStep(step));
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', initPainSolutionTimeline);
+    </script>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
